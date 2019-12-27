@@ -7,7 +7,7 @@ export function App(){
         <>
             <GlobalStyle />
             <IconStyle />
-            <i className="iconfont">&#xe62b;</i>
+            <div className="iconfont">&#xe62b;</div>
         </>
     );
 }
