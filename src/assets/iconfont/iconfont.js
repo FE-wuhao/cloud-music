@@ -12,8 +12,8 @@ export const IconStyle = createGlobalStyle`
 
 .iconfont {
   font-family: "iconfont" !important;/*!important可以突破css引用的自然优先级*/
-  // font-size: 16px;
-  // font-style: normal;
+   /* font-size: 16px; */
+   /* font-style: normal; */
 
   /*用来设置字体抗锯齿的*/
   -webkit-font-smoothing: antialiased;
