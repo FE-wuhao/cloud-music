@@ -23,11 +23,14 @@ function Slider (props) {
   return (
     <SliderContainer>
       <div className="before"></div> {/* 通过在同层设置了一个空的div并调整其背景色做了遮罩 */}
+      {/* 使用swiper的固定格式1 */}
       <div className="slider-container">
+        {/* 使用swiper的固定格式2 */}
         <div className="swiper-wrapper">
           {
             bannerList.map (slider => {
               return (
+                  //使用swiper的固定格式3
                 <div className="swiper-slide" key={slider.imageUrl}>
                   <div className="slider-nav">
                     <img src={slider.imageUrl} width="100%" height="100%" alt="推荐" />
