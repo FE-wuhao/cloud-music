@@ -25,6 +25,9 @@ function Home (props) {
           1.activeClassName所携带的样式只有导航被激活的时候才会生效
           2.Navlink其实就是一个a标签
         */}
+        {/* 这里点击了navlink，navlink自身不会消失的原因是：
+            它本身就在一级路由HOME中，点击他进行跳转的页面仅仅是二级路由部分，
+            每个一级路由代表一个大页面，每个二级路由为他一级路由的子集 */}
         <NavLink to="/recommend" activeClassName="selected"><TabItem><span > 推荐 </span></TabItem></NavLink>
         <NavLink to="/singers" activeClassName="selected"><TabItem><span > 歌手 </span></TabItem></NavLink>
         <NavLink to="/rank" activeClassName="selected"><TabItem><span > 排行榜 </span></TabItem></NavLink>

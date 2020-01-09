@@ -7,6 +7,7 @@ export const Top = styled.div`
   justify-content: space-between;
   padding: 5px 10px;
   background: ${style["theme-color"]};
+  /* '>'代表后代第一层选择器 */
   &>span {
     line-height: 40px;
     color: #f1f1f1;

@@ -2,7 +2,7 @@ import styled from'styled-components';
 import style from '../../assets/global-style';
 
 export const ListWrapper = styled.div`
-  max-width: 100%;
+  max-width: 100%;/*默认值是none，也就是不做限制，这里设置100%的用意是什么？搞不清楚 */
   .title {
     font-weight: 700;
     padding-left: 6px;
@@ -23,6 +23,7 @@ export const ListItem = styled.div`
   width: 32%;
 
   .img_wrapper {
+      /*做了淡入淡出效果 虽然不明显哈哈哈 */
     .decorate {
       position: absolute;
       top: 0;

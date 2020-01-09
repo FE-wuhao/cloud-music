@@ -5,8 +5,11 @@ export const SliderContainer = styled.div`
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
-  margin: auto;
+  /* 大致可以判断这里的height是无意义的，
+     因为百分比高度取决于父元素的高度，它的父元素使body和html，
+     如果不设置body和html的高度，那么百分比高度设置就是无效的 */
+  /* height: 100%;  */
+  /* margin: auto; */
   background: white;
   .before {
     position: absolute;
