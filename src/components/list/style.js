@@ -33,7 +33,7 @@ export const ListItem = styled.div`
     img高度就为0，反之padding则不会
     */
     padding-top: 100%; 
-      /*做了淡入淡出效果 虽然不明显哈哈哈 */
+      /*decorate的目的是为了img右上角的文字做遮罩，防止出现白色图片看不清字 */
     .decorate {
       position: absolute;
       top: 0;
