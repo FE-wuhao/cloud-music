@@ -23,6 +23,16 @@ export const ListItem = styled.div`
   width: 32%;
 
   .img_wrapper {
+    position: relative;
+    /* height: 0;  */
+    /* 全靠这个'padding-top: 100%'把img框的高度撑起来了,
+    容器的margin\padding使用百分比时是以父元素的width为基准的，
+    所以这里的'padding-top: 100%'就是父元素的width，同时这里不能
+    使用margin的理由是如果用了margin容器就没有高度了，但是用padding有，
+    而img是容器的子元素，他的height：100%取决于容器的高度，如果用了margin，
+    img高度就为0，反之padding则不会
+    */
+    padding-top: 100%; 
       /*做了淡入淡出效果 虽然不明显哈哈哈 */
     .decorate {
       position: absolute;
@@ -32,9 +42,6 @@ export const ListItem = styled.div`
       border-radius: 3px;
       background: linear-gradient (hsla (0,0%,43%,.4),hsla (0,0%,100%,0));
     }
-    position: relative;
-    height: 0;
-    padding-bottom: 100%;
     .play_count {
       position: absolute;
       right: 2px;
@@ -43,11 +50,12 @@ export const ListItem = styled.div`
       line-height: 15px;
       color: ${style["font-color-light"]};
       .play {
-        vertical-align: top;
+        /* vertical-align: top; */
       }
     }
     img {
       position: absolute;
+      top:0;
       width: 100%;
       height: 100%;
       border-radius: 3px;
