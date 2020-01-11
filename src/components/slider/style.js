@@ -14,7 +14,10 @@ export const SliderContainer = styled.div`
   background: white;
   .before {
     position: absolute;
+    /* 从这里可以看出下拉的全部长度为300px */
     top: -300px;
+    /* 高度与之前相比已经改变了，100px与60%有一定的差距，
+      但是完全不影响，凑整好看即可 */
     height: 400px;
     width: 100%;
     background: ${style["theme-color"]};
