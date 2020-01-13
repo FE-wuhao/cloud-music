@@ -17,3 +17,9 @@ axiosInstance.interceptors.response.use (
 export {
   axiosInstance
 };
+
+/*  axios使用步骤：
+    1.创建一个axios实例并配置axios相关属性，export出去以供调用
+    2.调用上一步创建好的axios实例，使用它的get，post...方法
+    3.可以设置拦截器在axios请求发出前和接收后对数据进行处理
+*/

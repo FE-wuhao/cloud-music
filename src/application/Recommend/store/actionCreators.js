@@ -1,3 +1,6 @@
+/* actioncreators和constants是一样东西，都是action，
+   存放的是状态处理函数
+*/
 import * as actionTypes from './constants';
 import { fromJS } from 'immutable';// 将 JS 对象转换成 immutable 对象
 import { getBannerRequest, getRecommendListRequest } from '../../../api/request';
