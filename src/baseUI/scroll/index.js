@@ -39,7 +39,7 @@ const Scroll = forwardRef ((props, ref) => {
   useEffect (() => {
     //如果scroll未初始化或者滑动回调函数为空值则返回空值
     if (!bScroll || !onScroll) return;
-    // 设置scroll监听事件，监听事件类型为滚动事件，及‘scroll’，
+    // 设置scroll监听事件，监听事件类型为滚动事件，即‘scroll’，
     // 执行内容为‘onScroll (scroll)’，一旦发生滚动则执行onScroll函数，
     //此处recmmend部分尚未定义使用该函数
     bScroll.on ('scroll', (scroll) => {
