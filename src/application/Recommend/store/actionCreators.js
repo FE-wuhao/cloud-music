@@ -27,7 +27,7 @@ export const getBannerList = () => {
 
 export const changeEnterLoading = (data) => ({
   type: actionTypes.CHANGE_ENTER_LOADING,
-  data
+  data//这样写也是可以的，get的时候不需要键名就能直接抓到数据了
 });
 // 另外在获取推荐歌单后，应把 loading 状态改为 false
 export const getRecommendList = () => {
