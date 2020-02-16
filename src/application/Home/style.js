@@ -6,6 +6,7 @@ export const Top = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 5px 10px;
+  /* "$+{xx}"是用占位符的方式来拼接字符串 */
   background: ${style["theme-color"]};
   /* '>'代表后代第一层选择器 */
   &>span {

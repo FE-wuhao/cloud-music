@@ -2,7 +2,9 @@ import styled from'styled-components';
 import style from '../../assets/global-style';
 
 export const ListWrapper = styled.div`
-  max-width: 100%;/*默认值是none，也就是不做限制，这里设置100%的用意是什么？搞不清楚 */
+  max-width: 100%;/*默认值是none，也就是不做限制，这里设置100%的用意是什么？搞不清楚。 
+                    max-width: 100%是如果指定元素的宽度不超过父元素的宽度，则大小不变，如果超过了父元素的宽度，则将宽度收缩为父元素的宽度。
+                    */
   .title {
     font-weight: 700;
     padding-left: 6px;
@@ -50,7 +52,7 @@ export const ListItem = styled.div`
       line-height: 15px;
       color: ${style["font-color-light"]};
       .play {
-        /* vertical-align: top; */
+        vertical-align: top;
       }
     }
     img {

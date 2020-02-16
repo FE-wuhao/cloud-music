@@ -3,6 +3,12 @@ import PropTypes from "prop-types"
 import BScroll from "better-scroll"
 import {ScrollContainer} from './style'
 
+/*  better-scroll使用步骤：
+    1.创建一个div作为betterscroll的容器
+    2.创建一个bscroll对象，配置好bscroll的各项参数，并将该对象绑定到该div容器上
+    3.在useeffect中监听bscroll的各种状态，相应的做出相应的操作
+*/
+
 //这里的转发ref在recommend中并未用到，因为在调用Scroll组建的时候并未传入ref
 const Scroll = forwardRef ((props, ref) => {
   const [bScroll, setBScroll] = useState ();
@@ -18,8 +24,8 @@ const Scroll = forwardRef ((props, ref) => {
     const scroll = new BScroll (scrollContaninerRef.current, {
       scrollX: direction === "horizental",
       scrollY: direction === "vertical",
-      //当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，
-      //而且在 momentum 滚动动画运行过程中实时派发 scroll 事件
+      /*当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，
+      而且在 momentum 滚动动画运行过程中实时派发 scroll 事件*/
       probeType: 3,
       click: click,
       bounce:{
@@ -29,7 +35,7 @@ const Scroll = forwardRef ((props, ref) => {
     });
     //将初始化过的BScroll存储到hooks的函数状态bScroll中
     setBScroll (scroll);
-    //return函数在组件销毁的同时清空scroll的配置
+    //return函数在组件销毁的同时清空scroll的配置（useeffect会在组件销毁的时候运行该effect函数返回的函数内容）
     return () => {
       setBScroll (null);
     }
@@ -83,6 +89,8 @@ const Scroll = forwardRef ((props, ref) => {
   });
   //recommend中未使用
   //useImperativeHandle的必要性需要后面考证
+  //useImperativeHandle限定了外部对ref定位到的元素的操作方式，只限定在useImperativeHandle提供了的操作方法范围内
+  //本质是外部传入的ref只定位到函数组件，通过外部传入函数组件的ref调用useImperativeHandle给出的方法控制函数组件内部元素
   //既然都把组件传给父组件了直接调用他的内部方法不可以吗
   useImperativeHandle (ref, () => ({
     refresh () {
@@ -101,6 +109,10 @@ const Scroll = forwardRef ((props, ref) => {
 
   return (
     // 绑定创建好的ref
+    //本质上就是创建一个div，通过绑定好ref，从而在上面的useeffect中实现对这个div的各种控制
+    //包括先将div绑定上better-scroll，然后对better-scroll的这种操作监听
+    //所以总结概括一下better-scroll的使用步骤
+    
     <ScrollContainer ref={scrollContaninerRef}>
       {props.children}
     </ScrollContainer>

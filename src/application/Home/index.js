@@ -15,7 +15,9 @@ function Home (props) {
 
   return (
     <div>
+      { renderRoutes (route.routes) }
       <Top>
+        {/* unicode模式引入iconfont，有字体编码的同时还有其对应的classname，便于直观了解是什么图标 */}
         <span className="iconfont menu">&#xe65c;</span>
         <span className="title">WebApp</span>
         <span className="iconfont search">&#xe62b;</span>
@@ -32,7 +34,6 @@ function Home (props) {
         <NavLink to="/singers" activeClassName="selected"><TabItem><span > 歌手 </span></TabItem></NavLink>
         <NavLink to="/rank" activeClassName="selected"><TabItem><span > 排行榜 </span></TabItem></NavLink>
       </Tab>
-      { renderRoutes (route.routes) }
     </div>
   )
 }
