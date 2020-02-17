@@ -33,7 +33,7 @@ function Recommend (props) {
   return (
     <Content>
       {/* 这个loading是fix布局的，相对于视口窗全屏，所以放在哪里都可以 */}
-      { enterLoading ? <Loading></Loading> : null }
+      <Loading show={enterLoading}></Loading>
       <Scroll className="list" onScroll={forceCheck}>
         <div>
           <Slider bannerList={bannerListJS}></Slider>

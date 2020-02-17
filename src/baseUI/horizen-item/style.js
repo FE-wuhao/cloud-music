@@ -23,6 +23,7 @@ export const ListItem = styled.span`
   font-size: ${style["font-size-m"]};
   padding: 5px 8px;/*设置items之间的间距 */
   border-radius: 10px;
+  /*被点击时的样式 */
   &.selected {
     color: ${style["theme-color"]};
     border: 1px solid ${style["theme-color"]};

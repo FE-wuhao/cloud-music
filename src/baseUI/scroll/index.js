@@ -1,7 +1,9 @@
 import React, { forwardRef, useState,useEffect, useRef, useImperativeHandle } from "react"
 import PropTypes from "prop-types"
 import BScroll from "better-scroll"
-import {ScrollContainer} from './style'
+import {ScrollContainer,PullUpLoading,PullDownLoading} from './style'
+import Loading from '../loading/index';
+import LoadingV2 from '../loading-v2/index';
 
 /*  better-scroll使用步骤：
     1.创建一个div作为betterscroll的容器
@@ -10,13 +12,14 @@ import {ScrollContainer} from './style'
 */
 
 //这里的转发ref在recommend中并未用到，因为在调用Scroll组建的时候并未传入ref
+//这些在recommend中未曾用到的事件在singer中用到了
 const Scroll = forwardRef ((props, ref) => {
   const [bScroll, setBScroll] = useState ();
   //创建一个ref
   const scrollContaninerRef = useRef ();
   //解构获取相关预设的默认配置
   const { direction, click, refresh,  bounceTop, bounceBottom } = props;
-  const { pullUp, pullDown, onScroll } = props;
+  const { pullUp, pullDown,pullUpLoading,pullDownLoading, onScroll } = props;
   //初始化scroll
   useEffect (() => {
     //这里将获取到的DOM节点ScrollContainer传递给BScroll，
@@ -106,6 +109,8 @@ const Scroll = forwardRef ((props, ref) => {
     }
   }));
 
+  const PullUpdisplayStyle = pullUpLoading ? {display: ""} : { display:"none" };
+  const PullDowndisplayStyle = pullDownLoading ? { display: ""} : { display:"none" };
 
   return (
     // 绑定创建好的ref
@@ -114,8 +119,12 @@ const Scroll = forwardRef ((props, ref) => {
     //所以总结概括一下better-scroll的使用步骤
     
     <ScrollContainer ref={scrollContaninerRef}>
-      {props.children}
-    </ScrollContainer>
+    {props.children}
+    {/* 滑到底部加载动画 */}
+    <PullUpLoading style={ PullUpdisplayStyle }><Loading></Loading></PullUpLoading>
+    {/* 顶部下拉刷新动画 */}
+    <PullDownLoading style={ PullDowndisplayStyle }><LoadingV2></LoadingV2></PullDownLoading>
+  </ScrollContainer>
   );
 })
 
