@@ -1,9 +1,10 @@
-import React, { forwardRef, useState,useEffect, useRef, useImperativeHandle } from "react"
+import React, { forwardRef, useState,useEffect, useRef, useImperativeHandle,useMemo } from "react"
 import PropTypes from "prop-types"
 import BScroll from "better-scroll"
 import {ScrollContainer,PullUpLoading,PullDownLoading} from './style'
 import Loading from '../loading/index';
 import LoadingV2 from '../loading-v2/index';
+import { debounce } from "../../api/utils";
 
 /*  better-scroll使用步骤：
     1.创建一个div作为betterscroll的容器
@@ -44,6 +45,17 @@ const Scroll = forwardRef ((props, ref) => {
     }
     //eslint-disable-next-line
   }, []);
+
+  let pullUpDebounce = useMemo (() => {
+    return debounce (pullUp, 3000)
+  }, [pullUp]);
+  // 千万注意，这里不能省略依赖，
+  // 不然拿到的始终是第一次 pullUp 函数的引用，相应的闭包作用域变量都是第一次的，产生闭包陷阱。下同。
+  
+  let pullDownDebounce = useMemo (() => {
+    return debounce (pullDown, 3000)
+  }, [pullDown]);
+
   //recommend中未使用
   useEffect (() => {
     //如果scroll未初始化或者滑动回调函数为空值则返回空值
@@ -64,7 +76,7 @@ const Scroll = forwardRef ((props, ref) => {
     bScroll.on ('scrollEnd', () => {
       // 判断是否滑动到了底部
       if (bScroll.y <= bScroll.maxScrollY + 100){
-        pullUp ();
+        pullUpDebounce ();
       }
     });
     return () => {
@@ -77,7 +89,7 @@ const Scroll = forwardRef ((props, ref) => {
     bScroll.on ('touchEnd', (pos) => {
       // 判断用户的下拉动作
       if (pos.y > 50) {
-        pullDown ();
+        pullDownDebounce ();
       }
     });
     return () => {
