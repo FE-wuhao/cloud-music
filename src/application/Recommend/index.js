@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import * as actionTypes from './store/actionCreators';
 import { forceCheck } from 'react-lazyload';
 import Loading from '../../baseUI/loading/index';
+import { renderRoutes } from 'react-router-config';
 
 function Recommend (props) {
   //bannerList:轮播图的图片资源
@@ -40,6 +41,7 @@ function Recommend (props) {
           <RecommendList recommendList={recommendListJS}></RecommendList>
         </div>
       </Scroll>
+      { renderRoutes (props.route.routes) }
     </Content> 
   )
 }

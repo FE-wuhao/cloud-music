@@ -6,6 +6,7 @@ import {
 } from './style';
 import { getCount } from "../../api/utils";
 import LazyLoad from "react-lazyload";
+import { withRouter } from 'react-router-dom';
 
 /* ListWrapper：整个推荐列表部分的大容器
     h1：推荐歌单列表的标题
@@ -23,6 +24,10 @@ import LazyLoad from "react-lazyload";
       作用是解除懒加载状态显示图片，实现手段是。。。有待考证！
 */
 function RecommendList (props) {
+  const enterDetail = (id) => {
+    props.history.push (`/recommend/${id}`)//路由跳转  渲染album页面
+  }
+
   return (
     <ListWrapper>
       <h1 className="title"> 推荐歌单 </h1>
@@ -31,7 +36,7 @@ function RecommendList (props) {
           //此处的推荐列表资源竟然没有提前解构出来，不够规范，值得改进
           props.recommendList.map ((item, index) => {
             return (
-              <ListItem key={item.id + index}>
+              <ListItem key={item.id + index} onClick={() => enterDetail (item.id)}>{/*点击具体歌单时根据歌单Id发出请求请求歌单数据  并进行路由跳转 渲染album页面 */}
                 <div className="img_wrapper">
                   <div className="decorate"></div>
                   <LazyLoad placeholder={<img width="100%" height="100%" src={require ('./music.png')} alt="music"/>}>
@@ -54,5 +59,5 @@ function RecommendList (props) {
   );
   }
  
-export default React.memo (RecommendList);
+export default React.memo (withRouter (RecommendList));
 
