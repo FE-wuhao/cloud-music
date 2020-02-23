@@ -32,7 +32,7 @@ export const debounce = (func, delay) => {
 */
 export const filterIndex = rankList => {
   for (let i = 0; i < rankList.length - 1; i++) {
-    if (rankList [i].tracks.length && !rankList [i + 1].tracks.length) {
+    if (rankList[i].tracks.length && !rankList[i + 1].tracks.length) {
       return i + 1;
     }
   }
@@ -44,4 +44,14 @@ export const filterIdx = name => {
     if (RankTypes[key] === name) return key;
   }
   return null;
+};
+
+export const getName = list => {
+  let str = "";
+  list.map ((item, index) => {
+    //如果是数组的第一个则直接返回‘歌手名’  否则返回‘/歌手名’
+    str += index === 0 ? item.name : "/" + item.name;
+    return item;
+  });
+  return str;
 };
