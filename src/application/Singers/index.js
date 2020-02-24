@@ -21,6 +21,7 @@ import  LazyLoad, {forceCheck} from 'react-lazyload';
 import Scroll from './../../baseUI/scroll/index';
 import {connect} from 'react-redux';
 import Loading from '../../baseUI/loading';
+import { renderRoutes } from 'react-router-config';
 
 function Singers(props) {
   let [category, setCategory] = useState('');//当前被点击的分类列表中的项的key值
@@ -54,6 +55,10 @@ function Singers(props) {
     pullDownRefreshDispatch(category, alpha);//上拉到顶部时重新初始化歌手数据
   };
 
+  const enterDetail = (id)  => {
+    props.history.push (`/singers/${id}`);
+  };
+
   const renderSingerList = () => {
     const list = singerList ? singerList.toJS(): [];
     console.log(props)
@@ -63,7 +68,7 @@ function Singers(props) {
         {
           list.map((item, index) => {
             return (
-              <ListItem key={item.accountId+""+index}>
+              <ListItem key={item.accountId+""+index}  onClick={() => enterDetail (item.id)}>
                 <div className="img_wrapper">
                   <LazyLoad placeholder={<img width="100%" height="100%" src={require('./singer.png')} alt="music"/>}>
                     <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music"/>
@@ -108,6 +113,7 @@ function Singers(props) {
         </Scroll>
         <Loading show={enterLoading}></Loading>
       </ListContainer>
+      { renderRoutes (props.route.routes) }
     </div>
   )
 }

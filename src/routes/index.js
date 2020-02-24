@@ -5,6 +5,7 @@ import Recommend from '../application/Recommend';
 import Singers from '../application/Singers';
 import Rank from '../application/Rank';
 import Album from '../application/Album';
+import Singer from '../application/Singer';
 
 //最外层用数组包裹是因为顶层路由不一定只有一个页面，每一个具体的路由配置都是一个对象
 export default [
@@ -31,7 +32,14 @@ export default [
       },
       {
         path: "/singers",
-        component: Singers
+        component: Singers,
+        key: "singers",//同理  这边的key是用来干嘛的
+        routes: [
+          {
+            path: "/singers/:id",
+            component: Singer
+          }
+        ]
       },
       {
         path: "/rank",
