@@ -35,7 +35,14 @@ export default [
       },
       {
         path: "/rank",
-        component: Rank
+        component: Rank,
+        key: "rank",//这里为什么跟其他路由不一样多了个key？
+        routes: [
+          {
+            path: "/rank/:id",
+            component: Album
+          }
+        ]
       }
     ]
   }

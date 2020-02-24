@@ -55,3 +55,8 @@ export const getName = list => {
   });
   return str;
 };
+
+// 判断一个对象是否为空
+export const isEmptyObject = obj => !obj//非假=真
+ || Object.keys (obj).length === 0;//长度为0=真
+ //真：空对象  假：非空对象

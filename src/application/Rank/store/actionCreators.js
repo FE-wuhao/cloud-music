@@ -8,9 +8,9 @@ const changeRankList = (data) => ({
   })
   
 const changeLoading = (data) => ({
-type: CHANGE_LOADING,
-data
-})
+  type: CHANGE_LOADING,
+  data
+  })
   
 export const getRankList = () => {
 return dispatch => {

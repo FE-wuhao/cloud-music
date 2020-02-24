@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {getRankList} from './store/actionCreators'
 import {List,ListItem,SongList,Container,EnterLoading} from './style'
 import Scroll from '../../baseUI/scroll/index';
-import { filterIndex, filterIdx } from '../../api/utils';
+import { filterIndex } from '../../api/utils';
 import { renderRoutes } from 'react-router-config';
 import Loading from '../../baseUI/loading';
 
@@ -16,12 +16,18 @@ function Rank(props) {
   let rankList = list ? list.toJS () : [];
   //组件挂载的同时获取排行榜信息
   useEffect (() => {
-    getRankListDataDispatch ();
+    if(!rankList.length){
+      getRankListDataDispatch();
+    }
   }, []);
+
+  const enterDetail = (detail) => {
+    props.history.push(`/rank/${detail.id}`)
+  }
   //找出全球榜与官方榜的分界点索引值，并将全球榜和官方榜的数据分离开来分别存储
-  let globalStartIndex = filterIndex (rankList);
-  let officialList = rankList.slice (0, globalStartIndex);
-  let globalList = rankList.slice (globalStartIndex);
+  let globalStartIndex = filterIndex(rankList);
+  let officialList = rankList.slice(0, globalStartIndex);
+  let globalList = rankList.slice(globalStartIndex);
 
   //renderSongList是renderRankList的子项，用于渲染官方榜右边的歌曲信息的
   const renderSongList = (list) => {
@@ -43,7 +49,8 @@ function Rank(props) {
         {
         list.map ((item) => {
           return (
-            <ListItem key={item.coverImgId} tracks={item.tracks} onClick={() => enterDetail (item.name)}>{/*根据是否有tracks来决定是否进行flex布局以及榜单图片的大小设置 */}
+            /*就是这个key有问题 */
+            <ListItem key={item.coverImgId} tracks={item.tracks} onClick={() => enterDetail (item)}>{/*根据是否有tracks来决定是否进行flex布局以及榜单图片的大小设置 */}
               <div className="img_wrapper">
                 <img src={item.coverImgUrl} alt=""/>{/*榜单图片 */}
                 <div className="decorate"></div>{/*遮罩来防止图片颜色太浅看不清字（但是该看不清的还是看不清。。。。。） */}
@@ -57,14 +64,6 @@ function Rank(props) {
       </List>
     )
   }
-
-  const enterDetail = (name) => {
-    const idx = filterIdx(name);//根据榜单名获取该榜单的索引值
-    if(idx === null) {
-      alert("暂无相关数据");
-      return;
-    } 
-}
 
   // 榜单数据未加载出来之前都给隐藏
   let displayStyle = loading ? {"display":"none"}:  {"display": ""};
