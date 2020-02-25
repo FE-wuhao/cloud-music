@@ -5,6 +5,8 @@ import {
   Tab,
   TabItem, } from './style';
 import { NavLink } from 'react-router-dom';
+import Player from '../Player';
+
 /*
   嵌套路由需要在产生嵌套的父组件内再次声明renderRoutes
   重点： 每个组件的props默认都携带了route对象，
@@ -34,6 +36,7 @@ function Home (props) {
         <NavLink to="/singers" activeClassName="selected"><TabItem><span > 歌手 </span></TabItem></NavLink>
         <NavLink to="/rank" activeClassName="selected"><TabItem><span > 排行榜 </span></TabItem></NavLink>
       </Tab>
+      <Player></Player>
     </div>
   )
 }
