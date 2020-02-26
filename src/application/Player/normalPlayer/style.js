@@ -17,20 +17,33 @@ export const NormalPlayerContainer = styled.div`
   bottom: 0;
   z-index: 150;
   background: ${style["background-color"]};
-  &.normal-enter,
-  &.normal-exit-done {
+  /*这个插件类名的渲染过程是：
+      enter->enter-active->enter-done
+      exit->exit-active->exit-done
+   */
+
+   /*过渡属性transition
+        transition: property duration timing-function delay
+
+        transition 属性是一个简写属性，用于设置四个过渡属性：
+        transition-property     规定设置过渡效果的 CSS 属性的名称。
+        transition-duration     规定完成过渡效果需要多少秒或毫秒。
+        transition-timing-function     规定速度效果的速度曲线。
+        transition-delay           定义过渡效果何时开始。
+        注释：请始终设置 transition-duration属性，否则时长为 0，就不会产生过渡效果。
+    */
+  &.normal-enter,&.normal-exit-done {
     .top {
-      transform: translate3d(0, -100px, 0);
+      transform: translate3d(0, -100px, 0);/*标题缩上去 */
     }
     .bottom {
-      transform: translate3d(0, 100px, 0);
+      transform: translate3d(0, 100px, 0);/*工具栏缩下去 */
     }
   }
-  &.normal-enter-active,
-  &.normal-exit-active {
-    .top,
-    .bottom {
-      transform: translate3d(0, 0, 0);
+  &.normal-enter-active,&.normal-exit-active {
+    .top,.bottom {
+      transform: translate3d(0, 0, 0);/*标题下拉工具栏上拉 */
+      /*所有属性  在0.4S内慢速生效  速度曲线为cubic-bezier(0.86, 0.18, 0.82, 1.32) */
       transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
     }
     opacity: 1;

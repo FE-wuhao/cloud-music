@@ -40,18 +40,23 @@ function NormalPlayer(props) {
   const normalPlayerRef = useRef();//播放器界面全屏容器的ref
   const cdWrapperRef = useRef();//中间圆形图片的ref
 
-  const transform = prefixStyle("transform");
+  const transform = prefixStyle("transform");//为属性名称加上‘webkit，moz’等前缀
 
   const _getPosAndScale = () => {
-    const targetWidth = 40;
-    const paddingLeft = 40;
-    const paddingBottom = 30;
-    const paddingTop = 80;
-    const width = window.innerWidth * 0.8;
-    const scale = targetWidth / width;
-    // 两个圆心的横坐标距离和纵坐标距离
+    const targetWidth = 40;//小圆直径
+    const paddingLeft = 40;//小圆圆心x坐标值的绝对值
+    const paddingBottom = 30;//小圆圆心y坐标值的绝对值
+    const paddingTop = 80;/*大圆上边到视口上端的距离   这里的值我认为算的有问题▲▲▲▲▲▲▲
+                            除了算上Middle的top值80px还要算上CDWrapper的top值10%
+                          */
+    //window.innerWidth  视口宽度（包含滚动条）  
+    //$(window).width()不含滚动条
+    const width = window.innerWidth * 0.8;//大圆直径 因为css设置的width就是80%  所以这里*0.8
+    const scale = targetWidth / width;//小圆与大圆的大小比例  小圆直径/大圆直径
+    // 两个圆心的横坐标距离和纵坐标距离（注：负值！）
     const x = -(window.innerWidth / 2 - paddingLeft);
-    const y = window.innerHeight - paddingTop - width / 2 - paddingBottom;
+    // const y = window.innerHeight - paddingTop - width / 2 - paddingBottom - cdWrapperRef.current.style.height*0.1;
+    const y = window.innerHeight - paddingTop - width / 2 - paddingBottom - cdWrapperRef.current.style.height*0.1;
     return {
       x,
       y,
@@ -60,26 +65,43 @@ function NormalPlayer(props) {
   };
   const enter = () => {
     normalPlayerRef.current.style.display = "block";
-    const { x, y, scale } = _getPosAndScale();//获取miniPlayer图片中心相对normalPlayer唱片中心的偏移
+    //获取miniPlayer图片中心相对normalPlayer唱片中心的偏移
+    /*
+      x:两圆心的X坐标差值
+      y:两圆心的y坐标差值
+      scale:两圆的大小比例  小/大
+    */
+    const { x, y, scale } = _getPosAndScale();
+    /*
+      无论是在动画中还是在react-transition-group中translate都是相对于初始位置做移动。
+      也就是说如果你在20%的时候执行translate（50px,0）向右平移了50px
+      在30%的时候执行translate（0,0）则会向左平移50px  
+      因为你的移动的相对对象永远是初始位置
+    */
     let animation = {
       0: {
-        transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
+        //translate3d（x,y,z） x:正右负左  y：正下负上
+        //x是负值  所以是向左  y是正值  所以是向下
+        transform: `translate3d(${x}px,${y}px,0) scale(${scale})`//向左下移动并缩小
       },
       60: {
-        transform: `translate3d(0, 0, 0) scale(1.1)`
+        transform: `translate3d(0, 0, 0) scale(1.1)`//向右上移动并放大
       },
       100: {
-        transform: `translate3d(0, 0, 0) scale(1)`
+        transform: `translate3d(0, 0, 0) scale(1)`//原地不动并放大
       }
     };
+    //这个animations是create-keyframe-animation库的一种用法
+    //配置动画相关参数
     animations.registerAnimation({
       name: "move",
       animation,
       presets: {
         duration: 400,
-        easing: "linear"
+        easing: "linear"//匀速
       }
     });
+    //定位元素  播放动画
     animations.runAnimation(cdWrapperRef.current, "move");
   };
   const afterEnter = () => {
@@ -93,7 +115,10 @@ function NormalPlayer(props) {
     const cdWrapperDom = cdWrapperRef.current;
     cdWrapperDom.style.transition = "all 0.4s";
     const { x, y, scale } = _getPosAndScale();
-    cdWrapperDom.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+    //之前用的是create-keyframe-animation创建的向右上移动动画
+    //这里用的是css自带的transform并配合transition进行的慢动作移动特效
+    //那么问题来了 create-keyframe-animation有什么优势呢？？他能做到的事情我css做不到吗▲▲▲▲▲▲▲
+    cdWrapperDom.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;//向左下移动并缩小
   };
   const afterLeave = () => {
     if (!cdWrapperRef.current) return;
@@ -116,6 +141,11 @@ function NormalPlayer(props) {
   };
 
   return (
+    /*
+        用帧动画而不用普通的CSSTransition原因：
+        普通的CSSTransition是整个页面作为动画内容
+        帧动画是页面中的局部需要动画
+    */
     <CSSTransition
       classNames="normal"
       in={fullScreen}//如果全屏则展示载入动画

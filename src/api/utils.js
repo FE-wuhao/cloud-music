@@ -71,7 +71,10 @@ export const formatPlayTime = interval => {
 
 // 给css3相关属性增加浏览器前缀，处理浏览器兼容性问题
 let elementStyle = document.createElement("div").style;
-
+/*vendor：浏览器类型
+  查询的实现手段：通过创建一个div标签，
+  获取该标签的style属性，并且通过比对transform来确认浏览器的型号
+*/
 let vendor = (() => {
   //首先通过transition属性判断是何种浏览器
   let transformNames = {
@@ -88,7 +91,7 @@ let vendor = (() => {
   }
   return false;
 })();
-
+//有了浏览器型号再将需要改造的样式名称改造  如：‘transform’改造成‘webkitTransform’
 export function prefixStyle(style) {
   if (vendor === false) {
     return false;
@@ -96,5 +99,7 @@ export function prefixStyle(style) {
   if (vendor === "standard") {
     return style;
   }
-  return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+  return vendor //浏览器前缀
+  + style.charAt(0).toUpperCase() //首字母大写
+  + style.substr(1);//首字母后面的部分
 }
