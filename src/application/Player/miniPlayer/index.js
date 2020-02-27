@@ -28,6 +28,7 @@ function MiniPlayer(props) {
       <MiniPlayerContainer ref={miniPlayerRef} onClick={() => toggleFullScreen(true)}>
         <div className="icon">
           <div className="imgWrapper">
+            {/*播放时图片就旋转  暂停时就停止旋转 */}
             <img className={`play ${playing ? "": "pause"}`} src={song.al.picUrl} width="40" height="40" alt="img"/>
           </div>
         </div>
@@ -37,6 +38,7 @@ function MiniPlayer(props) {
         </div>
         <div className="control">
         <ProgressCircle radius={32} percent={percent}>
+          {/*播放和暂停时圆圈中间的团切换：三角/竖线 */}
           { playing ? 
             <i className="icon-mini iconfont icon-pause" onClick={e => clickPlaying(e, false)}>&#xe650;</i>
             :

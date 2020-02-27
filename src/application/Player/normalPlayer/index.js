@@ -222,6 +222,10 @@ function NormalPlayer(props) {
               <i
                 className="iconfont"
                 onClick={e => clickPlaying(e, !playing)}
+                /*react的dangerouslySetInnerHTML在一个dom里直接筛入一段纯html
+                格式：dangerouslySetInnerHTML={{ __html: content }}
+                */
+               //该操作是不安全的，会引发XSS攻击，所以他才叫做‘dangerouslySetInnerHTML’ 是有风险的  能不用则不用
                 dangerouslySetInnerHTML={{
                   __html: playing ? "&#xe723;" : "&#xe731;"
                 }}
