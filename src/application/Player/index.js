@@ -12,6 +12,10 @@ import {
 import MiniPlayer from './miniPlayer';
 import NormalPlayer from './normalPlayer';
 import { getSongUrl, isEmptyObject, shuffle, findIndex } from "../../api/utils";
+import Toast from "../../baseUI/toast/index";
+import { playMode } from '../../api/config';
+
+/*又发现一个bug  在歌曲上一首下一首切换的时候中间图片的旋转不会初始化▲▲▲▲▲▲ */
 
 function Player (props) {
 
@@ -34,157 +38,54 @@ function Player (props) {
     toggleFullScreenDispatch
   } = props;
 
+  const [modeText, setModeText] = useState("");//模式提醒文字内容
+  const [preSong, setPreSong] = useState({});//记录当前的歌曲，以便于下次重渲染时比对是否是一首歌 
+  const [currentTime, setCurrentTime] = useState(0);//目前播放时间
+  const [duration, setDuration] = useState(0);//歌曲总时长
+
+  const toastRef = useRef();
+  const audioRef = useRef();
+
   const playList = immutablePlayList.toJS();
   const sequencePlayList = immutableSequencePlayList.toJS();
   const currentSong = immutableCurrentSong.toJS();
-
-  //记录当前的歌曲，以便于下次重渲染时比对是否是一首歌
-  const [preSong, setPreSong] = useState({});
-
-/*从这个地方开始出问题的 
-现在我们把父组件中控制歌曲播放的的逻辑完善一下:
-mini播放器消失了✘✘✘✘✘✘✘✘✘✘✘✘*/
-
-  // //先mock一份currentIndex
-  // useEffect(() => {
-  //   changeCurrentIndexDispatch(0);
-  // }, [])
-
-  useEffect(() => {
-    if (
-      !playList.length ||
-      currentIndex === -1 ||
-      !playList[currentIndex] ||
-      playList[currentIndex].id === preSong.id 
-    )
-      return;
-    let current = playList[currentIndex];
-    changeCurrentDispatch(current);//赋值currentSong
-    // setSongReady(false);
-    setPreSong(current);
-    audioRef.current.src = getSongUrl(current.id);
-    setTimeout(() => {
-      audioRef.current.play();
-    });
-    togglePlayingDispatch(true);//播放状态
-    setCurrentTime(0);//从头开始播放
-    setDuration((current.dt / 1000) | 0);//时长
-  }, [playList, currentIndex]);
-
-  // useEffect(() => {
-  //   if(!currentSong) return;
-  //   changeCurrentIndexDispatch(0);//currentIndex默认为-1，临时改成0
-  //   let current = playList[0];
-  //   changeCurrentDispatch(current);//赋值currentSong
-  //   audioRef.current.src = getSongUrl(current.id);
-  //   setTimeout(() => {
-  //     audioRef.current.play();
-  //   });
-  //   togglePlayingDispatch(false);//播放状态
-  //   setCurrentTime(0);//从头开始播放
-  //   setDuration((current.dt / 1000) | 0);//时长
-  // }, []);
-
-  useEffect(() => {
-    playing ? audioRef.current.play() : audioRef.current.pause();
-  }, [playing]);
-
-  //目前播放时间
-  const [currentTime, setCurrentTime] = useState(0);
-  //歌曲总时长
-  const [duration, setDuration] = useState(0);
-  //歌曲播放进度
+    //歌曲播放进度
   /*isNaN() 函数用于检查其参数是否是非数字值。
   如果参数值为 NaN 或字符串、对象、undefined等非数字值则返回 true,
    否则返回 false */
-  let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
+   let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
+
+  const changeMode = () => {
+    let newMode = (mode + 1) % 3;//mode+1进行模式切换： 0：顺序模式 1：单曲循环 2：随机播放
+    if (newMode === 0) {//顺序模式
+      /*有一个问题：这个sequencePlayList的数据是从哪里来的？？？▲▲▲▲▲▲▲ */
+      changePlayListDispatch(sequencePlayList);//重置播放列表的内容为sequencePlayList
+      let index = findIndex(currentSong, sequencePlayList);//根据当前的歌曲获取他的索引号
+      changeCurrentIndexDispatch(index);//更改当前的索引号
+      setModeText("顺序循环");
+    } else if (newMode === 1) {//单曲循环
+      changePlayListDispatch(sequencePlayList);
+      setModeText("单曲循环");
+    } else if (newMode === 2) {//随机播放
+      let newList = shuffle(sequencePlayList);//洗牌算法打乱sequencePlayList顺序
+      let index = findIndex(currentSong, newList);
+      changePlayListDispatch(newList);
+      changeCurrentIndexDispatch(index);
+      setModeText("随机播放");
+    }
+    changeModeDispatch(newMode);//更新当前的mode值
+    toastRef.current.show();//显示文字提示
+  };
 
   const clickPlaying = (e, state) => {
     e.stopPropagation();
     togglePlayingDispatch(state);
   };
-  // //mock一份playList，后面直接从 redux 拿，现在只是为了调试播放效果。
-  // const playList = [
-  //   {
-  //     ftype: 0,
-  //     djId: 0,
-  //     a: null,
-  //     cd: '01',
-  //     crbt: null,
-  //     no: 1,
-  //     st: 0,
-  //     rt: '',
-  //     cf: '',
-  //     alia: [
-  //       '手游《梦幻花园》苏州园林版推广曲'
-  //     ],
-  //     rtUrls: [],
-  //     fee: 0,
-  //     s_id: 0,
-  //     copyright: 0,
-  //     h: {
-  //       br: 320000,
-  //       fid: 0,
-  //       size: 9400365,
-  //       vd: -45814
-  //     },
-  //     mv: 0,
-  //     al: {
-  //       id: 84991301,
-  //       name: '拾梦纪',
-  //       picUrl: 'http://p1.music.126.net/M19SOoRMkcHmJvmGflXjXQ==/109951164627180052.jpg',
-  //       tns: [],
-  //       pic_str: '109951164627180052',
-  //       pic: 109951164627180050
-  //     },
-  //     name: '拾梦纪',
-  //     l: {
-  //       br: 128000,
-  //       fid: 0,
-  //       size: 3760173,
-  //       vd: -41672
-  //     },
-  //     rtype: 0,
-  //     m: {
-  //       br: 192000,
-  //       fid: 0,
-  //       size: 5640237,
-  //       vd: -43277
-  //     },
-  //     cp: 1416668,
-  //     mark: 0,
-  //     rtUrl: null,
-  //     mst: 9,
-  //     dt: 234947,
-  //     ar: [
-  //       {
-  //         id: 12084589,
-  //         name: '妖扬',
-  //         tns: [],
-  //         alias: []
-  //       },
-  //       {
-  //         id: 12578371,
-  //         name: '金天',
-  //         tns: [],
-  //         alias: []
-  //       }
-  //     ],
-  //     pop: 5,
-  //     pst: 0,
-  //     t: 0,
-  //     v: 3,
-  //     id: 1416767593,
-  //     publishTime: 0,
-  //     rurl: null
-  //   }
-  // ];
-
   //一首歌循环
   const handleLoop = () => {
-    audioRef.current.currentTime = 0;
-    changePlayingState(true);
-    audioRef.current.play();
+    audioRef.current.currentTime = 0;//audio当前播放时间清零
+    changePlayingState(true);//设置播放标志位为播放中
+    audioRef.current.play();//开始播放
   };
 
   const handlePrev = () => {
@@ -206,14 +107,13 @@ mini播放器消失了✘✘✘✘✘✘✘✘✘✘✘✘*/
       return;
     }
     let index = currentIndex + 1;
-    if (index === playList.length) index = 0;//如果索引值等于playList.length则将0赋给index
-    if (!playing) togglePlayingDispatch(true);
-    changeCurrentIndexDispatch(index);
+    if (index === playList.length) index = 0;//如果索引值达到最大值则清零
+    if (!playing) togglePlayingDispatch(true);//如果没播放就硬要让他播放！
+    changeCurrentIndexDispatch(index);//更改当前的索引值为index
   };
 
-  const audioRef = useRef();
-
   const updateTime = e => {
+    //e.target指向audio元素，currentTime是它的一个属性，表示当前播放的时间，以秒计 
     setCurrentTime(e.target.currentTime);
   };
 /*有个bug  在mini播放器暂停曲子以后normal界面的进度调节小圆圈位置会被重置到起点▲▲▲ */
@@ -226,25 +126,43 @@ mini播放器消失了✘✘✘✘✘✘✘✘✘✘✘✘*/
     }
   };
 
-  const changeMode = () => {
-    let newMode = (mode + 1) % 3;
-    if (newMode === 0) {
-      //顺序模式
-      changePlayListDispatch(sequencePlayList);
-      let index = findIndex(currentSong, sequencePlayList);
-      changeCurrentIndexDispatch(index);
-    } else if (newMode === 1) {
-      //单曲循环
-      changePlayListDispatch(sequencePlayList);
-    } else if (newMode === 2) {
-      //随机播放
-      let newList = shuffle(sequencePlayList);
-      let index = findIndex(currentSong, newList);
-      changePlayListDispatch(newList);
-      changeCurrentIndexDispatch(index);
+  const handleEnd = () => {
+    if (mode === playMode.loop) {//如果播放模式是单曲循环模式则执行单曲循环函数
+      handleLoop();
+    } else {
+      handleNext();//否则执行下一曲函数
     }
-    changeModeDispatch(newMode);
   };
+  //组件初始化
+  useEffect(() => {
+    if (
+      !playList.length ||//播放列表长度为0
+      currentIndex === -1 ||//歌曲编号为-1
+      !playList[currentIndex] ||//播放列表中该编号歌曲不存在
+      playList[currentIndex].id === preSong.id //当前歌曲与上一首歌曲相同
+    )
+      return;
+    let current = playList[currentIndex];//获取当前歌曲
+    changeCurrentDispatch(current);//赋值currentSong
+    // setSongReady(false);
+    setPreSong(current);//记当前曲目
+    audioRef.current.src = getSongUrl(current.id);//播放器获取歌曲资源
+    /*
+        setTimeout（function）的意义
+      js是单线程，setTimeout函数虽然时间设置为0，
+      但是也是一个异步，他会在任务池中排队等待js引擎空闲才执行
+     */
+    setTimeout(() => {
+      audioRef.current.play();
+    });
+    togglePlayingDispatch(true);//播放状态
+    setCurrentTime(0);//从头开始播放
+    setDuration((current.dt / 1000) | 0);//时长
+  }, [playList, currentIndex]);
+
+  useEffect(() => {
+    playing ? audioRef.current.play() : audioRef.current.pause();
+  }, [playing]);
 
   return (
     <div> 
@@ -277,12 +195,13 @@ mini播放器消失了✘✘✘✘✘✘✘✘✘✘✘✘*/
       }
       <audio 
         ref={audioRef}
-        onTimeUpdate={updateTime}
+        onTimeUpdate={updateTime}//当前播放位置改变时的执行函数
+        onEnded={handleEnd}//歌曲播放完处理事件
       ></audio>
+      <Toast text={modeText} ref={toastRef}></Toast>
     </div>
   )
 }
-
 // 映射 Redux 全局的 state 到组件的 props 上
 const mapStateToProps = state => ({
   fullScreen: state.getIn (["player", "fullScreen"]),
@@ -294,7 +213,6 @@ const mapStateToProps = state => ({
   playList: state.getIn (["player", "playList"]),
   sequencePlayList: state.getIn (["player", "sequencePlayList"])
 });
-
 // 映射 dispatch 到 props 上
 const mapDispatchToProps = dispatch => {
   return {
@@ -321,9 +239,5 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-
 // 将 ui 组件包装成容器组件
-export default connect (
-  mapStateToProps,
-  mapDispatchToProps
-)(React.memo (Player));
+export default connect (mapStateToProps,mapDispatchToProps)(React.memo (Player));

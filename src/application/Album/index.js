@@ -11,11 +11,11 @@ import { connect } from 'react-redux';
 import { getAlbumList, changeEnterLoading } from './store/actionCreators';
 import Loading from '../../baseUI/loading/index';
 import { HEADER_HEIGHT } from './../../api/config';
-
+import MusicNote from "../../baseUI/music-note/index";
+import SongsList from '../SongsList';
 
 function Album (props) {
   const id = props.match.params.id;//这里就是路由传参传进来的歌单ID
-
   const { currentAlbum:currentAlbumImmutable, enterLoading } = props;
   const { getAlbumDataDispatch } = props;
   const [showStatus, setShowStatus] = useState (true);//开启/关闭动画
@@ -23,12 +23,15 @@ function Album (props) {
   const [isMarquee, setIsMarquee] = useState (false);// 是否跑马灯
 
   const headerEl = useRef ();
-  
+  const musicNoteRef = useRef ();
+  //将请求回来存放到redux中的歌单数据存入currentAlbum变量中
+  let currentAlbum = currentAlbumImmutable.toJS ();
+
   useEffect (() => {
     getAlbumDataDispatch (id);//歌单页面载入的同时获取歌单数据
   }, [getAlbumDataDispatch, id]);
 
-  let currentAlbum = currentAlbumImmutable.toJS ();//将请求回来存放到redux中的歌单数据存入currentAlbum变量中
+  
   //usecallback的优势是什么？？？
   const handleBack = useCallback (() => {
     setShowStatus (false);//关闭动画
@@ -52,6 +55,10 @@ function Album (props) {
     }
   }, [currentAlbum]);
   
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation ({ x, y });
+  };
+
   const renderTopDesc = () => {
     return (
       <TopDesc background={currentAlbum.coverImgUrl}>
@@ -167,11 +174,19 @@ function Album (props) {
                 <div>{/*这里的div干嘛用的？？？？？ */}
                 { renderTopDesc () }
                 { renderMenu () }
-                { renderSongList () }
+                {/* { renderSongList () } */}
+                <SongsList
+                  songs={currentAlbum.tracks}
+                  collectCount={currentAlbum.subscribedCount}
+                  showCollect={true}
+                  showBackground={true}
+                  musicAnimation={musicAnimation}
+                ></SongsList>
                 </div>  
             </Scroll>
         ) : null
       }
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   )

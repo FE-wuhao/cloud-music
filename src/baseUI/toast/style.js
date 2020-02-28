@@ -1,5 +1,5 @@
 import style from '../../assets/global-style';
-import styled from './node_modules/styled-components';
+import styled from 'styled-components';
 
 export const ToastWrapper = styled.div`
   position: fixed;
@@ -8,18 +8,18 @@ export const ToastWrapper = styled.div`
   width: 100%;
   height: 50px;
   /* background: ${style["highlight-background-color"]}; */
-  &.drop-enter{
+  &.drop-enter{/*先透明并下移 */
     opacity: 0;
     transform: translate3d(0, 100%, 0);
   }
-  &.drop-enter-active{
+  &.drop-enter-active{/*再显现并在0.3S内上移 */
     opacity: 1;
     transition: all 0.3s;
     transform: translate3d(0, 0, 0);
   }
   &.drop-exit-active{
     opacity: 0;
-    transition: all 0.3s;
+    transition: all 0.3s;/*为什么都显示透明了这个过渡效果还能显现 */
     transform: translate3d(0, 100%, 0);
   }
   .text{

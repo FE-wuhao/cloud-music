@@ -110,11 +110,11 @@ export const getSongUrl = id => {
 };
 
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+  return Math.floor(Math.random() * (max - min + 1) + min);//Math.floor：去尾函数
 }
-// 随机算法
+// 洗牌算法：https://blog.csdn.net/qq_26399665/article/details/79831490
 export function shuffle(arr) {
-  let new_arr = [];
+  let new_arr = [];//创建一个新数组new_arr存储传入的数组arr
   arr.forEach(item => {
     new_arr.push(item);
   });
@@ -129,6 +129,7 @@ export function shuffle(arr) {
 
 // 找到当前的歌曲索引
 export const findIndex = (song, list) => {
+  //list.findIndex（有返回值，返回一个数组）：将符合条件的项插入创建的新数组中并最终返回该数组
   return list.findIndex(item => {
     return song.id === item.id;
   });

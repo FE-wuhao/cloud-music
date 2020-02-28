@@ -1,8 +1,22 @@
 import React from 'react';
 import { SongList, SongItem } from "./style";
 import { getName } from '../../api/utils';
+import { changePlayList, changeCurrentIndex, changeSequecePlayList } from './../../application/Player/store/actionCreators';
+import { connect } from 'react-redux';
 
 const SongsList = React.forwardRef ((props, refs)=> {
+
+  const { changePlayListDispatch, changeCurrentIndexDispatch, changeSequecePlayListDispatch } = props;
+
+  // 接受触发动画的函数
+  const { musicAnimation } = props;
+    //曲目被点击时的执行函数
+  const selectItem = (e, index) => {
+    changePlayListDispatch (songs);
+    changeSequecePlayListDispatch (songs);
+    changeCurrentIndexDispatch (index);
+    musicAnimation (e.nativeEvent.clientX, e.nativeEvent.clientY);
+  }
 
   const { 
     collectCount, //收藏人数
@@ -11,11 +25,6 @@ const SongsList = React.forwardRef ((props, refs)=> {
    } = props;
 
   const totalCount = songs.length;//所有歌曲的数量
-
-  //曲目被点击时的执行函数
-  const selectItem = (e, index) => {
-    console.log (index);
-  }
 
   let songList = (list) => {
     let res = [];//用来保存整个列表的html的变量
@@ -67,4 +76,19 @@ const SongsList = React.forwardRef ((props, refs)=> {
   )
 });
 
-export default React.memo (SongsList);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changePlayListDispatch (data){
+      dispatch (changePlayList (data));
+    },
+    changeCurrentIndexDispatch (data) {
+      dispatch (changeCurrentIndex (data));
+    },
+    changeSequecePlayListDispatch (data) {
+      dispatch (changeSequecePlayList (data))
+    }
+  }
+};
+
+// 将 ui 组件包装成容器组件
+export default connect (null, mapDispatchToProps)(React.memo (SongsList));

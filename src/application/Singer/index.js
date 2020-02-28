@@ -9,6 +9,7 @@ import SongsList from "../SongsList/index";
 import { connect } from 'react-redux';
 import Loading from "./../../baseUI/loading/index";
 import { getSingerInfo, changeEnterLoading } from "./store/actionCreators";
+import MusicNote from "../../baseUI/music-note/index";
 
 function Singer(props) {
   const initialHeight = useRef(0);//初始高度   我不明白了  这里的ref并没有用到任何元素身上  直接用变量不久好了  这里用什么ref哦。。。。
@@ -31,6 +32,7 @@ function Singer(props) {
   const songScroll = useRef();//歌单列表的scroll的ref
   const header = useRef();//返回按键和歌手名那一行的ref
   const layer = useRef();//歌单背面的白色背景的ref
+  const musicNoteRef = useRef ();
 
   //往上偏移的尺寸，露出圆角，否则白色的背景看不到圆角
   const OFFSET = 5;
@@ -96,6 +98,10 @@ function Singer(props) {
     setShowStatus(false);
   }, []);
 
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation ({ x, y });
+  };
+
   return (
     //CSSTransition跟之前一样用来展示过渡动画的
     <CSSTransition
@@ -125,10 +131,12 @@ function Singer(props) {
             <SongsList
               songs={songs}
               showCollect={false}//是否显示收藏数量？  这里是不显示
+              musicAnimation={musicAnimation}
             ></SongsList>
           </Scroll>
         </SongListWrapper>
         <Loading show={loading}></Loading>
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   )
