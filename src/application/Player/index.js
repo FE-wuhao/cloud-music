@@ -14,6 +14,7 @@ import NormalPlayer from './normalPlayer';
 import { getSongUrl, isEmptyObject, shuffle, findIndex } from "../../api/utils";
 import Toast from "../../baseUI/toast/index";
 import { playMode } from '../../api/config';
+import PlayList from './play-list/index';
 
 /*又发现一个bug  在歌曲上一首下一首切换的时候中间图片的旋转不会初始化▲▲▲▲▲▲ */
 
@@ -30,12 +31,13 @@ function Player (props) {
   } = props;
 
   const {
-    togglePlayingDispatch,
     changeCurrentIndexDispatch,
     changeCurrentDispatch,
     changePlayListDispatch,//改变playList
     changeModeDispatch,//改变mode
-    toggleFullScreenDispatch
+    togglePlayingDispatch,
+    toggleFullScreenDispatch,
+    togglePlayListDispatch
   } = props;
 
   const [modeText, setModeText] = useState("");//模式提醒文字内容
@@ -45,6 +47,7 @@ function Player (props) {
 
   const toastRef = useRef();
   const audioRef = useRef();
+  const songReady = useRef (true);
 
   const playList = immutablePlayList.toJS();
   const sequencePlayList = immutableSequencePlayList.toJS();
@@ -133,18 +136,30 @@ function Player (props) {
       handleNext();//否则执行下一曲函数
     }
   };
+
+  const handleError = () => {
+    songReady.current = true;
+    alert ("播放出错");
+  };
+
   //组件初始化
   useEffect(() => {
     if (
       !playList.length ||//播放列表长度为0
       currentIndex === -1 ||//歌曲编号为-1
       !playList[currentIndex] ||//播放列表中该编号歌曲不存在
-      playList[currentIndex].id === preSong.id //当前歌曲与上一首歌曲相同
+      playList[currentIndex].id === preSong.id || //当前歌曲与上一首歌曲相同
+      !songReady.current
     )
       return;
     let current = playList[currentIndex];//获取当前歌曲
     changeCurrentDispatch(current);//赋值currentSong
-    // setSongReady(false);
+    songReady.current = false;/* songReady的初始值是true，这里把songReady置为false,
+                                 这样在这首歌成功播放之前songReady都是false，也就是说一进useeffect都会
+                                 return，直到play执行完了置songReady为true才能播放下一首歌 */
+                                 /*那么问题来了  既然return了 那么那一次的点击操作应该是被忽略了，
+                                 也就是相当于没点，那为什么还会在值变为true以后执行了歌曲的切换呢？？？▲▲▲▲▲
+                                 */
     setPreSong(current);//记当前曲目
     audioRef.current.src = getSongUrl(current.id);//播放器获取歌曲资源
     /*
@@ -153,7 +168,10 @@ function Player (props) {
       但是也是一个异步，他会在任务池中排队等待js引擎空闲才执行
      */
     setTimeout(() => {
-      audioRef.current.play();
+      // 注意，play 方法返回的是一个 promise 对象
+      audioRef.current.play ().then (() => {
+        songReady.current = true;
+      });
     });
     togglePlayingDispatch(true);//播放状态
     setCurrentTime(0);//从头开始播放
@@ -174,6 +192,7 @@ function Player (props) {
           percent={percent}
           toggleFullScreen={toggleFullScreenDispatch}
           clickPlaying={clickPlaying}
+          togglePlayList={togglePlayListDispatch}//是否显示比方列表
         /> 
       }
       { isEmptyObject(currentSong) ? null : 
@@ -191,13 +210,16 @@ function Player (props) {
           handleNext={handleNext}
           mode={mode}
           changeMode={changeMode}
+          togglePlayList={togglePlayListDispatch}
         />
       }
       <audio 
         ref={audioRef}
         onTimeUpdate={updateTime}//当前播放位置改变时的执行函数
         onEnded={handleEnd}//歌曲播放完处理事件
+        onError={handleError}
       ></audio>
+      <PlayList></PlayList>
       <Toast text={modeText} ref={toastRef}></Toast>
     </div>
   )

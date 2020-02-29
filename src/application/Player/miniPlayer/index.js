@@ -7,9 +7,16 @@ import ProgressCircle from '../../../baseUI/progress-circle';
 function MiniPlayer(props) {
   const { song, fullScreen, playing, percent } = props;
 
-  const { toggleFullScreen, clickPlaying } =  props;
+  const { toggleFullScreen, clickPlaying,togglePlayList } =  props;
 
   const miniPlayerRef = useRef();
+
+  const handleTogglePlayList = (e) => {
+    togglePlayList (true);
+    /*冒泡阻止事件：让事件只在当前元素中生效而不向上传递到父祖元素上生效
+     这里的目的在于只发生歌单的弹出，如果不阻止冒泡会触发父元素的onclick事件，从而播放器页面也弹出了*/
+    e.stopPropagation ();
+  };
 
   return (
     <CSSTransition 
@@ -46,7 +53,7 @@ function MiniPlayer(props) {
           }
         </ProgressCircle>
         </div>
-        <div className="control">
+        <div className="control" onClick={handleTogglePlayList}>
           <i className="iconfont">&#xe640;</i>
         </div>
       </MiniPlayerContainer>

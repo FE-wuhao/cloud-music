@@ -34,7 +34,8 @@ function NormalPlayer(props) {
     handleNext,
     onProgressChange,
     clickPlaying,
-    toggleFullScreen
+    toggleFullScreen,
+    togglePlayList 
   } = props;
 
   const normalPlayerRef = useRef();//播放器界面全屏容器的ref
@@ -145,6 +146,7 @@ function NormalPlayer(props) {
         用帧动画而不用普通的CSSTransition原因：
         普通的CSSTransition是整个页面作为动画内容
         帧动画是页面中的局部需要动画
+        真的是这样吗？？？局部的也可以通过类名控制啊。。。▲▲▲▲▲
     */
     <CSSTransition
       classNames="normal"
@@ -234,7 +236,7 @@ function NormalPlayer(props) {
             <div className="icon i-right" onClick={handleNext}>
               <i className="iconfont">&#xe718;</i>
             </div>
-            <div className="icon i-right">
+            <div className="icon i-right" onClick={() => togglePlayList (true)}>
               <i className="iconfont">&#xe640;</i>
             </div>
           </Operators>

@@ -15,7 +15,7 @@ export const ListContainer = styled.div`
   position: fixed;
   top: 160px;/* 实际测量出上端的所有东西高度之和为160px */
   left: 0;
-  bottom: 0;
+  bottom: ${props => props.play > 0?"60px": 0};
   overflow: hidden;
   width: 100%;
 `;

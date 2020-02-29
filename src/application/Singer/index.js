@@ -36,7 +36,7 @@ function Singer(props) {
 
   //往上偏移的尺寸，露出圆角，否则白色的背景看不到圆角
   const OFFSET = 5;
-
+  const { songsCount } = props;
   //初始化
   useEffect(() => {
     const id = props.match.params.id;//获取路由传参传过来的当前路由的id
@@ -112,7 +112,7 @@ function Singer(props) {
       unmountOnExit
       onExited={() => props.history.goBack()}
     >
-      <Container>
+      <Container play={songsCount}>
         <Header
           handleClick={setShowStatusFalse}
           title={artist.name}//歌手名
@@ -147,6 +147,7 @@ const mapStateToProps = state => ({
   artist: state.getIn(["singerInfo", "artist"]),
   songs: state.getIn(["singerInfo", "songsOfArtist"]),
   loading: state.getIn(["singerInfo", "loading"]),
+  songsCount: state.getIn (['player', 'playList']).size,// 尽量减少 toJS 操作，直接取 size 属性就代表了 list 的长度
 });
 // 映射dispatch到props上
 const mapDispatchToProps = dispatch => {

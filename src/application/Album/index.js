@@ -16,7 +16,7 @@ import SongsList from '../SongsList';
 
 function Album (props) {
   const id = props.match.params.id;//这里就是路由传参传进来的歌单ID
-  const { currentAlbum:currentAlbumImmutable, enterLoading } = props;
+  const { currentAlbum:currentAlbumImmutable, enterLoading,songsCount  } = props;
   const { getAlbumDataDispatch } = props;
   const [showStatus, setShowStatus] = useState (true);//开启/关闭动画
   const [title, setTitle] = useState ("歌单");//歌单页面最左上角的标题内容
@@ -161,7 +161,7 @@ function Album (props) {
       onExited={props.history.goBack}//当组件exit类名被移除时调用props.history.goBack
     >
     {/* 动画展示的旋转平移的具体内容 */}
-      <Container>
+      <Container play={songsCount}>
         <Loading show={enterLoading}></Loading>
         {/*对于这里的header和scroll为什么会有重叠抱有疑问  难道是因为不是一个z-index上的？ */}
         {/*scroll相对于container的大小是100%，故产生了重叠 */}
@@ -196,6 +196,7 @@ function Album (props) {
 const mapStateToProps = (state) => ({
   currentAlbum: state.getIn (['album', 'currentAlbum']),
   enterLoading: state.getIn (['album', 'enterLoading']),
+  songsCount: state.getIn (['player', 'playList']).size,
 });
 // 映射 dispatch 到 props 上
 const mapDispatchToProps = (dispatch) => {

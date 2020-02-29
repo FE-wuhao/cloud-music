@@ -27,7 +27,7 @@ function Singers(props) {
   let [category, setCategory] = useState('');//当前被点击的分类列表中的项的key值
   let [alpha, setAlpha] = useState('');//当前被点击的首字母列表中的项的key值
 
-  const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
+  const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount,songsCount  } = props;
 
   const { getHotSingerDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch } = props;
 
@@ -101,7 +101,7 @@ function Singers(props) {
           oldVal={alpha}
         ></Horizen>
       </NavContainer> 
-      <ListContainer>
+      <ListContainer play={songsCount}>
         <Scroll
           pullUp={ handlePullUp }//如果监测到滑动到了底部则执行handlePullUp方法
           pullDown = { handlePullDown }//如果监测到滑动到了顶部则执行handlePullDown方法
@@ -123,7 +123,8 @@ const mapStateToProps = (state) => ({
   enterLoading: state.getIn(['singers', 'enterLoading']),
   pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
   pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
-  pageCount: state.getIn(['singers', 'pageCount'])
+  pageCount: state.getIn(['singers', 'pageCount']),
+  songsCount: state.getIn (['player', 'playList']).size,
 });
 const mapDispatchToProps = (dispatch) => {
   return {

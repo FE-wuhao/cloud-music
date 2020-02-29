@@ -16,6 +16,8 @@ function Recommend (props) {
 
   const { getBannerDataDispatch, getRecommendListDataDispatch } = props;
 
+  const { songsCount } = props;
+
   useEffect (() => {
    // 如果页面有数据，则不发请求
   //immutable 数据结构中长度属性 size
@@ -32,7 +34,7 @@ function Recommend (props) {
   const recommendListJS = recommendList ? recommendList.toJS () :[];
 
   return (
-    <Content>
+    <Content play={songsCount}>
       {/* 这个loading是fix布局的，相对于视口窗全屏，所以放在哪里都可以 */}
       <Loading show={enterLoading}></Loading>
       <Scroll className="list" onScroll={forceCheck}>
@@ -56,7 +58,8 @@ const mapStateToProps = (state) => ({
 
   bannerList: state.getIn (['recommend', 'bannerList']),
   recommendList: state.getIn (['recommend', 'recommendList']),
-  enterLoading: state.getIn (['recommend', 'enterLoading'])
+  enterLoading: state.getIn (['recommend', 'enterLoading']),
+  songsCount: state.getIn (['player', 'playList']).size,// 尽量减少 toJS 操作，直接取 size 属性就代表了 list 的长度
 });
 // 映射 dispatch 到 props 上
 const mapDispatchToProps = (dispatch) => {
