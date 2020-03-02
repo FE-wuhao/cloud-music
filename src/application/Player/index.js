@@ -15,7 +15,9 @@ import { getSongUrl, isEmptyObject, shuffle, findIndex } from "../../api/utils";
 import Toast from "../../baseUI/toast/index";
 import { playMode } from '../../api/config';
 import PlayList from './play-list/index';
-
+import {getLyricRequest} from '../../api/request'
+import Lyric from './../../api/lyric-parser';
+ 
 /*又发现一个bug  在歌曲上一首下一首切换的时候中间图片的旋转不会初始化▲▲▲▲▲▲ */
 
 function Player (props) {
@@ -44,10 +46,13 @@ function Player (props) {
   const [preSong, setPreSong] = useState({});//记录当前的歌曲，以便于下次重渲染时比对是否是一首歌 
   const [currentTime, setCurrentTime] = useState(0);//目前播放时间
   const [duration, setDuration] = useState(0);//歌曲总时长
+  const [currentPlayingLyric, setPlayingLyric] = useState ("");//当前播放点处歌词
 
   const toastRef = useRef();
   const audioRef = useRef();
   const songReady = useRef (true);
+  const currentLyric = useRef ();//指向实例化的歌词解析对象，该对象的类就是lyric-parser中编写的类Lyric
+  const currentLineNum = useRef (0);//当前歌词播放行数
 
   const playList = immutablePlayList.toJS();
   const sequencePlayList = immutableSequencePlayList.toJS();
@@ -79,10 +84,12 @@ function Player (props) {
     changeModeDispatch(newMode);//更新当前的mode值
     toastRef.current.show();//显示文字提示
   };
-
   const clickPlaying = (e, state) => {
     e.stopPropagation();
     togglePlayingDispatch(state);
+    if (currentLyric.current) {
+      currentLyric.current.togglePlay (currentTime*1000);//秒转毫秒，当前播放时间currentTime作为offset传入播放/暂停函数togglePlay
+    }
   };
   //一首歌循环
   const handleLoop = () => {
@@ -90,7 +97,6 @@ function Player (props) {
     changePlayingState(true);//设置播放标志位为播放中
     audioRef.current.play();//开始播放
   };
-
   const handlePrev = () => {
     //播放列表只有一首歌时单曲循环
     if (playList.length === 1) {
@@ -102,7 +108,6 @@ function Player (props) {
     if (!playing) togglePlayingDispatch(true);
     changeCurrentIndexDispatch(index);
   };
-
   const handleNext = () => {
     //播放列表只有一首歌时单曲循环
     if (playList.length === 1) {
@@ -114,7 +119,6 @@ function Player (props) {
     if (!playing) togglePlayingDispatch(true);//如果没播放就硬要让他播放！
     changeCurrentIndexDispatch(index);//更改当前的索引值为index
   };
-
   const updateTime = e => {
     //e.target指向audio元素，currentTime是它的一个属性，表示当前播放的时间，以秒计 
     setCurrentTime(e.target.currentTime);
@@ -127,8 +131,10 @@ function Player (props) {
     if (!playing) {
       togglePlayingDispatch(true);
     }
+    if (currentLyric.current) {
+      currentLyric.current.seek (newTime * 1000);
+    }
   };
-
   const handleEnd = () => {
     if (mode === playMode.loop) {//如果播放模式是单曲循环模式则执行单曲循环函数
       handleLoop();
@@ -136,10 +142,42 @@ function Player (props) {
       handleNext();//否则执行下一曲函数
     }
   };
-
   const handleError = () => {
     songReady.current = true;
     alert ("播放出错");
+  };
+  const handleLyric = ({lineNum, txt}) => {//该回调的任务是获得当前正在播放的歌词以及歌词所在的行数，
+                                           //并存放进ref：linenum和usestate：currentPlayingLyric中
+    if (!currentLyric.current) return;//如果当前的歌词清单对象不存在退出当前函数handleLyric
+    currentLineNum.current = lineNum;//设置当前播放的歌词在歌词数组中的行数lineNum
+    setPlayingLyric (txt);//设置当前播放的歌词内容是txt
+  };
+  const getLyric = id => {
+    let lyric = "";
+    if (currentLyric.current) {
+      currentLyric.current.stop ();//设置播放状态为暂停且停止timer以终止歌词的播放
+    }
+    // 避免 songReady 恒为 false 的情况
+    getLyricRequest (id)
+      .then (data => {
+        lyric = data.lrc.lyric;//异步之后取得歌词
+        if (!lyric) {
+          currentLyric.current = null;
+          return;
+        }
+        currentLyric.current = new Lyric (lyric, handleLyric);//实例化Lyric对象用以解析排版歌词
+                                                              //这里的回调的任务是获得当前正在播放的歌词以及歌词所在的行数，
+                                                              //并存放进ref和usestate中
+        currentLyric.current.play ();//照理说要给play传递当前歌曲播放的相关进度信息的，但这里是刚获得歌词信息的地方，
+                                     //songready标志位尚未置位，歌曲尚未播放，故直接使用默认值0就行了
+        currentLineNum.current = 0;//这里的ref值也给0就可以了
+        currentLyric.current.seek (0);//既然这里都seek了，那上面的play的意义何在呢？反正seek也要执行play，唯一的区别是传入的isSeek的值不一样，想不太通▲▲
+      })
+      .catch (() => {
+        //歌词出问题了也正常播放歌曲
+        songReady.current = true;
+        audioRef.current.play ();
+      });
   };
 
   //组件初始化
@@ -174,10 +212,10 @@ function Player (props) {
       });
     });
     togglePlayingDispatch(true);//播放状态
+    getLyric (current.id);//根据歌曲id获取歌词信息
     setCurrentTime(0);//从头开始播放
-    setDuration((current.dt / 1000) | 0);//时长
+    setDuration((current.dt / 1000) | 0);//时长  回头测试一下|和||是否都能达到动态选择对象的效果▲▲▲▲▲
   }, [playList, currentIndex]);
-
   useEffect(() => {
     playing ? audioRef.current.play() : audioRef.current.pause();
   }, [playing]);
@@ -211,6 +249,9 @@ function Player (props) {
           mode={mode}
           changeMode={changeMode}
           togglePlayList={togglePlayListDispatch}
+          currentLyric={currentLyric.current}
+          currentPlayingLyric={currentPlayingLyric}
+          currentLineNum={currentLineNum.current}
         />
       }
       <audio 

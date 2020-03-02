@@ -50,7 +50,8 @@ function Rank(props) {
         list.map ((item) => {
           return (
             /*就是这个key有问题 */
-            <ListItem key={item.coverImgId} tracks={item.tracks} onClick={() => enterDetail (item)}>{/*根据是否有tracks来决定是否进行flex布局以及榜单图片的大小设置 */}
+            // <ListItem key={item.coverImgId} tracks={item.tracks} onClick={() => enterDetail (item)}>
+            <ListItem key={item.name} tracks={item.tracks} onClick={() => enterDetail (item)}>{/*根据是否有tracks来决定是否进行flex布局以及榜单图片的大小设置 */}
               <div className="img_wrapper">
                 <img src={item.coverImgUrl} alt=""/>{/*榜单图片 */}
                 <div className="decorate"></div>{/*遮罩来防止图片颜色太浅看不清字（但是该看不清的还是看不清。。。。。） */}
