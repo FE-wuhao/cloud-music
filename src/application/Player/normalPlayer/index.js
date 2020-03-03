@@ -164,7 +164,7 @@ function NormalPlayer(props) {
     if (!lyricScrollRef.current) return;
     let bScroll = lyricScrollRef.current.getBScroll();//获取是里画过的歌词的bScroll对象
     if (currentLineNum > 5) {//如果当前播放的歌词的行号超过了5的话
-      let lineEl = lyricLineRefs.current[currentLineNum - 5].current;//获取当前播放歌词的5句之前的歌词lineEl
+      let lineEl = lyricLineRefs.current[currentLineNum - 5].current;//获取当前播放歌词的5句之前的歌词的ref
       bScroll.scrollToElement(lineEl, 1000);//使得lineEl滚动到当前页面的最上端以保证高亮的当前歌词在第6条的位置，滚动时长为1000ms
     } else {
       // 当前歌词行数<=5, 直接滚动到最顶端
@@ -246,7 +246,7 @@ function NormalPlayer(props) {
                   {
                     currentLyric
                       ? currentLyric.lines.map ((item, index) => {
-                      // 对于每一行歌词都创建ref
+                      // 对于每一行歌词都创建ref，用于后面的歌词滚动，因为scrolltoelement需要具体的dom，提前存好的ref提供过去就好了
                       lyricLineRefs.current [index] = React.createRef ();
                       return (
                         <p
