@@ -52,6 +52,7 @@ function Player (props) {
   const audioRef = useRef();
   const songReady = useRef (true);
   const currentLyric = useRef ();//指向实例化的歌词解析对象，该对象的类就是lyric-parser中编写的类Lyric
+                                 //其实就是当前播放的歌曲的歌词解析后生成的对象
   const currentLineNum = useRef (0);//当前歌词播放行数
 
   const playList = immutablePlayList.toJS();
@@ -61,7 +62,7 @@ function Player (props) {
   /*isNaN() 函数用于检查其参数是否是非数字值。
   如果参数值为 NaN 或字符串、对象、undefined等非数字值则返回 true,
    否则返回 false */
-   let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
+  let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
   const changeMode = () => {
     let newMode = (mode + 1) % 3;//mode+1进行模式切换： 0：顺序模式 1：单曲循环 2：随机播放
@@ -146,19 +147,22 @@ function Player (props) {
     songReady.current = true;
     alert ("播放出错");
   };
-  const handleLyric = ({lineNum, txt}) => {//该回调的任务是获得当前正在播放的歌词以及歌词所在的行数，
-                                           //并存放进ref：linenum和usestate：currentPlayingLyric中
+  //该回调的任务是获得当前正在播放的歌词以及歌词所在的行数，
+  //并存放进 ref：linenum 和 usestate：currentPlayingLyric 中
+  //一旦调用currentLyric.current的play方法或者seek方法就会触发回调，更新当前播放器歌词的信息
+  const handleLyric = ({lineNum, txt}) => {
     if (!currentLyric.current) return;//如果当前的歌词清单对象不存在退出当前函数handleLyric
     currentLineNum.current = lineNum;//设置当前播放的歌词在歌词数组中的行数lineNum
     setPlayingLyric (txt);//设置当前播放的歌词内容是txt
   };
+  //获取当前播放的歌曲的歌词
   const getLyric = id => {
     let lyric = "";
-    if (currentLyric.current) {
+    if (currentLyric.current) {//如果当前歌词信息为空
       currentLyric.current.stop ();//设置播放状态为暂停且停止timer以终止歌词的播放
     }
     // 避免 songReady 恒为 false 的情况
-    getLyricRequest (id)
+    getLyricRequest (id)//根据歌曲id请求歌词
       .then (data => {
         lyric = data.lrc.lyric;//异步之后取得歌词
         if (!lyric) {

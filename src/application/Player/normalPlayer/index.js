@@ -30,9 +30,9 @@ function NormalPlayer(props) {
     percent,
     currentTime,
     duration,
-    currentLineNum,//当前播放的歌曲在歌曲清单中的行号
+    currentLineNum,//当前播放的个歌词在歌曲中的行号
     currentPlayingLyric,//当前播放的歌词
-    currentLyric//当前播放的歌词清单
+    currentLyric//当前播放的歌曲的歌词清单
   } = props;
   //dispatch
   const {
@@ -47,9 +47,9 @@ function NormalPlayer(props) {
 
   const normalPlayerRef = useRef();//播放器界面全屏容器的ref
   const cdWrapperRef = useRef();//中间圆形图片的ref
-  const currentState = useRef ("");
+  const currentState = useRef ("");//当前播放器的播放界面：图片/歌词
   const lyricScrollRef = useRef ();
-  const lyricLineRefs = useRef ([]);
+  const lyricLineRefs = useRef ([]);//每一行歌词的ref的数组集合
 
   const transform = prefixStyle("transform");//为属性名称加上‘webkit，moz’等前缀
 
@@ -138,7 +138,7 @@ function NormalPlayer(props) {
     cdWrapperDom.style[transform] = "";
     //如果退出全屏则隐藏normalPlayer
     normalPlayerRef.current.style.display = "none";
-    currentState.current = "";
+    currentState.current = "";//将当前的播放器界面切换回图片界面
   };
   const getPlayMode = () => {
     let content;
@@ -162,11 +162,10 @@ function NormalPlayer(props) {
 
   useEffect(() => {
     if (!lyricScrollRef.current) return;
-    let bScroll = lyricScrollRef.current.getBScroll();
-    if (currentLineNum > 5) {
-      // 保持高亮的当前歌词在第5条的位置
-      let lineEl = lyricLineRefs.current[currentLineNum - 5].current;
-      bScroll.scrollToElement(lineEl, 1000);
+    let bScroll = lyricScrollRef.current.getBScroll();//获取是里画过的歌词的bScroll对象
+    if (currentLineNum > 5) {//如果当前播放的歌词的行号超过了5的话
+      let lineEl = lyricLineRefs.current[currentLineNum - 5].current;//获取当前播放歌词的5句之前的歌词lineEl
+      bScroll.scrollToElement(lineEl, 1000);//使得lineEl滚动到当前页面的最上端以保证高亮的当前歌词在第6条的位置，滚动时长为1000ms
     } else {
       // 当前歌词行数<=5, 直接滚动到最顶端
       bScroll.scrollTo(0, 0, 1000);
@@ -237,6 +236,7 @@ function NormalPlayer(props) {
             in={currentState.current === "lyric"}//如果currentState.current是lyric则显示动画
           >
             <LyricContainer>
+              {/*这部分的逻辑重点在这个scroll这里 */}
               <Scroll ref={lyricScrollRef}>
                 {/* 如果currentState.current是lyric则显示歌词*/}
                 <LyricWrapper
@@ -252,7 +252,7 @@ function NormalPlayer(props) {
                         <p
                           className={`text ${
                             currentLineNum === index ? "current" : ""
-                          }`}
+                          }`}//比对是否是当前行  如果是则字体高亮
                           key={item + index}
                           ref={lyricLineRefs.current [index]}
                         >

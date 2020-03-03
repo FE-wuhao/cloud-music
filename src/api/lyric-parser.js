@@ -32,7 +32,7 @@ export default class Lyric {
     const lines = this.lrc.split('\n');//根据换行号分离数组
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];//如"[00:01.997]作词: 薛之谦"
-      let result = timeExp.exec(line);
+      let result = timeExp.exec(line);//对每一行歌词运用正则
       if (!result) continue;//如果result为空，则跳过本次进行下一轮循环
       const txt = line.replace(timeExp, '').trim();//现在把时间戳去掉，只剩下歌词文本
       if (txt) {
@@ -52,6 +52,12 @@ export default class Lyric {
       return a.time - b.time;
     });//根据时间排序
   }
+  /*
+    play函数的作用：
+    1.设置当前歌词的状态为播放
+    2.向播放器返回当前播放的歌词行号和歌词内容
+    3.根据是否手动调整过进度重置下一句歌词播放的时间间隔
+  */
   //offset为时间进度，isSeek标志位表示用户是否手动调整进度
   play(offset = 0, isSeek = false) {
     if (!this.lines.length) {
@@ -61,11 +67,11 @@ export default class Lyric {
     this.curLineIndex = this._findcurLineIndex(offset);//根据当前的播放进度找到所在的行
     //现在正处于第this.curLineIndex-1行
     //立即定位，方式是调用传来的回调函数，并把当前歌词信息传给它
-    this._callHandler(this.curLineIndex - 1);
+    this._callHandler(this.curLineIndex - 1);//根据当前的索引号，向播放器的回调函数传递当前播放的’歌词行号‘和’歌词内容‘
     this.startStamp = +new Date() - offset;//根据时间进度判断歌曲开始的具体时间  
                                            //+是类型转换符，将原类型转换为number类型
                                            //+new Date()：number类型的1970年1月1日午夜以来的毫秒数
-    if (this.curLineIndex < this.lines.length) {
+    if (this.curLineIndex < this.lines.length) {//如果当前歌词还没播放完，根据是否手动调整过进度重置下一句歌词播放的时间间隔
       clearTimeout(this.timer);//停止定时器
       //继续播放
       this._playRest(isSeek);
@@ -105,22 +111,26 @@ export default class Lyric {
     })
   }
   // isSeek标志位表示用户是否手动调整进度
-  //_playRest这个函数的意义其实在于开启定时器，以到了时间间隔切换歌词
+  //_playRest这个函数的意义其实在于开启定时器，以到了时间间隔就向播放器传递歌词索引号和歌词内容
   _playRest(isSeek = false) {
-    let line = this.lines[this.curLineIndex];//获取当前播放行的歌词信息
+    let line = this.lines[this.curLineIndex];//获取下一个播放行的歌词信息
     let delay;
     if (isSeek) {//如果手动调整过进度
-      //delay：‘调整进度后’的播放时间点与‘当前’实际播放时间点的‘时间差’
+      //delay：‘调整进度后’的播放时间点与‘当前’实际播放时间点的‘时间差’，
+      //其实就是获取下一句歌词的时间点与传入play函数的offset的时间差
+      //line.time：下一句歌词的时间点  
+      //(+new Date() - this.startStamp)：传入play函数的offset
       delay = line.time - (+new Date() - this.startStamp);
     } else {
-      //拿到上一行的歌词开始时间，算间隔
-      let preTime = this.lines[this.curLineIndex - 1] ? this.lines[this.curLineIndex - 1].time : 0;//如果上一行的歌词存在则抓取他的时间，否则当做是0
-      delay = line.time - preTime;//设置时间差=当前行的时间点-上一行的时间点
+      //拿到当前播放行的歌词开始时间，算间隔
+      let preTime = this.lines[this.curLineIndex - 1] ? this.lines[this.curLineIndex - 1].time : 0;//如果当前行的歌词存在则抓取他的时间，否则当做是0
+      delay = line.time - preTime;//设置时间差=下一行的时间点-当前行的时间点
     }
     this.timer = setTimeout(() => {
-      this._callHandler(this.curLineIndex++);
-      if (this.curLineIndex < this.lines.length && this.state === STATE_PLAYING) {//这一个if的意义是重置isseek为未手动调整过进度，
-                                                                                  //同时重置timeout的时间为两句歌词的时间间隔
+      this._callHandler(this.curLineIndex++);//时间到了就向播放器传递下句歌词的内容和索引号，传递完后curLineIndex自增一次
+      //这一个if的意义是重置isseek为未手动调整过进度，同时重置timeout的时间为两句歌词的时间间隔，
+      //关键点在于该函数是在定时时间到了才会执行，所以不会产生连续的函数执行，只会在定时时间到了执行一次，直到歌词播放完
+      if (this.curLineIndex < this.lines.length && this.state === STATE_PLAYING) {
         this._playRest();
       }
     }, delay)
