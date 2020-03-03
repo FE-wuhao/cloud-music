@@ -43,7 +43,7 @@ export const getSuggestListRequest = query => {
 export const getResultSongsListRequest = query => {
   return axiosInstance.get (`/search?keywords=${query}`);
 };
-
+//根据歌曲id获取歌曲资源
 export const getSongDetailRequest = id => {
   return axiosInstance.get (`/song/detail?ids=${id}`);
 };
