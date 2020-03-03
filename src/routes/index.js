@@ -6,6 +6,7 @@ import Singers from '../application/Singers';
 import Rank from '../application/Rank';
 import Album from '../application/Album';
 import Singer from '../application/Singer';
+import Search from '../application/Search';
 
 //最外层用数组包裹是因为顶层路由不一定只有一个页面，每一个具体的路由配置都是一个对象
 export default [
@@ -51,7 +52,13 @@ export default [
             component: Album
           }
         ]
-      }
+      },
+      {
+        path: "/search",
+        exact: true,
+        key: "search",
+        component: Search
+      } 
     ]
   }
 ]

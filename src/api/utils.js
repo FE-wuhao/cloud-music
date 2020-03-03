@@ -11,7 +11,7 @@ export const getCount = (count) => {
     }
   }
 
-  // 防抖函数
+  // 防抖函数 项目结束完要去研究▲▲
 export const debounce = (func, delay) => {
   let timer;
   return function (...args) {

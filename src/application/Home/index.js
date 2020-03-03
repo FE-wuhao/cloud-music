@@ -22,7 +22,7 @@ function Home (props) {
         {/* unicode模式引入iconfont，有字体编码的同时还有其对应的classname，便于直观了解是什么图标 */}
         <span className="iconfont menu">&#xe65c;</span>
         <span className="title">WebApp</span>
-        <span className="iconfont search">&#xe62b;</span>
+        <span className="iconfont search" onClick={() => props.history.push ('/search')}>&#xe62b;</span>
       </Top>
       <Tab>
         {/* 
