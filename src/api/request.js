@@ -35,11 +35,11 @@ export const getLyricRequest = id => {
 export const getHotKeyWordsRequest = () => {
   return axiosInstance.get (`/search/hot`);
 };
-
+//根据搜索内容获取相关歌手和歌单
 export const getSuggestListRequest = query => {
   return axiosInstance.get (`/search/suggest?keywords=${query}`);
 };
-
+//根据搜索内容获取相关歌曲
 export const getResultSongsListRequest = query => {
   return axiosInstance.get (`/search?keywords=${query}`);
 };

@@ -25,6 +25,50 @@ const handleDeleteSong = (state, song) => {
     'currentIndex': fromJS(currentIndex),
   });
 }
+//搜索到的歌曲插入播放器播放列表
+const handleInsertSong = (state, song) => {
+  const playList = JSON.parse (JSON.stringify (state.get ('playList').toJS ()));
+  const sequenceList = JSON.parse (JSON.stringify (state.get ('sequencePlayList').toJS ()));
+  let currentIndex = state.get ('currentIndex');
+  
+  let fpIndex = findIndex (song, playList);//查询要插入的曲目在歌单列表中的索引号
+  if (fpIndex === currentIndex && currentIndex !== -1) return state;//如果索引号与当前播放曲目的索引号相同且当前播放曲目的索引号不为-1则退出函数，没必要插入
+  if (fpIndex > -1) {// 如果列表中已经存在要添加的歌
+    if (currentIndex > fpIndex) {// 如果索引比目前播放歌曲的索引小，那么删除它，同时当前 index 要减一
+      playList.splice (fpIndex, 1);
+      currentIndex--;
+    } else {
+      playList.splice (fpIndex, 1);// 否则直接删掉
+    }
+  }
+  //插入歌曲
+  currentIndex++;//索引号+1
+  /* splice(index,howmany,item1,.....,itemX)
+      index：规定添加/删除项目的位置
+      howmany：要删除的项目数量。如果设置为 0，则不会删除项目
+      item1,.....,itemX：向数组添加的新项目
+  */
+  playList.splice (currentIndex, 0, song);//向当前的索引号位置插入歌曲
+  // 同理，处理 sequenceList
+  let sequenceIndex = findIndex (playList [currentIndex], sequenceList) + 1;
+  let fsIndex = findIndex (song, sequenceList);
+  // 开始插入
+  sequenceList.splice (sequenceIndex, 0, song);
+  if (fsIndex > -1) {
+    // 跟上面类似的逻辑。如果在前面就删掉，index--; 如果在后面就直接删除
+    if (sequenceIndex > fsIndex) {
+      sequenceList.splice (fsIndex, 1);
+      sequenceIndex--;
+    } else {
+      sequenceList.splice (fsIndex + 1, 1);
+    }
+  }
+  return state.merge ({
+    'playList': fromJS (playList),
+    'sequencePlayList': fromJS (sequenceList),
+    'currentIndex': fromJS (currentIndex),
+  });
+}
 
 const defaultState = fromJS ({
   fullScreen: false,// 播放器是否为全屏模式
@@ -57,6 +101,8 @@ export default (state = defaultState, action) => {
       return state.set ('showPlayList', action.data);
     case actionTypes.DELETE_SONG:
       return handleDeleteSong(state, action.data);
+    case actionTypes.INSERT_SONG:
+      return handleInsertSong (state, action.data);
     default:
       return state;
   }
