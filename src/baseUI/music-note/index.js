@@ -1,20 +1,20 @@
 import React, {useEffect, useImperativeHandle, useRef, forwardRef} from 'react';
 import { prefixStyle } from './../../api/utils';
 import {Container} from './style'
-/*音符先放一放  这个不是关键  先往后过★★★ */
+
 const MusicNote = forwardRef ((props, ref) => {
 
   const iconsRef = useRef ();
-  // 容器中有 3 个音符，也就是同时只能有 3 个音符下落
-  const ICON_NUMBER = 3;
+  
+  const ICON_NUMBER = 3;// 同时生成的音符的最大数量
 
   const transform = prefixStyle ("transform");
 
-  // 原生 DOM 操作，返回一个 DOM 节点对象
+  //我知道了！！！这个tempNode就是个工具人 为的是生成一个带class带innnerhtml的div 嘻嘻嘻 这都被我发现了
   const createNode = (txt) => {
     const template = `<div class='icon_wrapper'>${txt}</div>`;
-    let tempNode = document.createElement ('div');
-    tempNode.innerHTML = template;
+    let tempNode = document.createElement ('div');//创建一个div->tempNode
+    tempNode.innerHTML = template;//div内部放入template，template内部再放入一个形参
     return tempNode.firstChild;
   }
 
@@ -24,16 +24,18 @@ const MusicNote = forwardRef ((props, ref) => {
       iconsRef.current.appendChild (node);
     }
     // 类数组转换成数组，当然也可以用 [...xxx] 解构语法或者 Array.from ()
-    let domArray = [].slice.call (iconsRef.current.children);
+    let domArray = [].slice.call (iconsRef.current.children);//children指的是子元素 
+                                                            //子元素的子元素就不管了 
+                                                            //三个音符小蝌蚪到了domArray数组中了
     domArray.forEach (item => {
-      item.running = false;
-      item.addEventListener ('transitionend', function () {
-        this.style ['display'] = 'none';
-        this.style [transform] = `translate3d (0, 0, 0)`;
-        this.running = false;
+      item.running = false;//这个running应该是一个自定义属性
+      item.addEventListener ('transitionend', function () {//为每个小音符定义transitionend事件的执行内容
+        this.style ['display'] = 'none';//不显示
+        this.style [transform] = `translate3d (0, 0, 0)`;//移动到原来的位置
+        this.running = false;//不运动
 
-        let icon = this.querySelector ('div');
-        icon.style [transform] = `translate3d (0, 0, 0)`;
+        let icon = this.querySelector ('div');//仅仅返回第一个匹配到的元素
+        icon.style [transform] = `translate3d (0, 0, 0)`;//移动到原来的位置
       }, false);
     });
     //eslint-disable-next-line
