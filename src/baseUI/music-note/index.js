@@ -1,7 +1,7 @@
 import React, {useEffect, useImperativeHandle, useRef, forwardRef} from 'react';
 import { prefixStyle } from './../../api/utils';
 import {Container} from './style'
-
+//尼玛！！！整半天原来是tradition的空格惹的祸！！！！！
 const MusicNote = forwardRef ((props, ref) => {
 
   const iconsRef = useRef ();
@@ -29,13 +29,14 @@ const MusicNote = forwardRef ((props, ref) => {
                                                             //三个音符小蝌蚪到了domArray数组中了
     domArray.forEach (item => {
       item.running = false;//这个running应该是一个自定义属性
-      item.addEventListener ('transitionend', function () {//为每个小音符定义transitionend事件的执行内容
-        this.style ['display'] = 'none';//不显示
-        this.style [transform] = `translate3d (0, 0, 0)`;//移动到原来的位置
+      //为每个小音符定义transitionend事件的执行内容
+      item.addEventListener ('transitionend', function () {
+        this.style['display'] = 'none';//不显示
+        this.style[transform] = `translate3d(0, 0, 0)`;//移动到原来的位置
         this.running = false;//不运动
 
         let icon = this.querySelector ('div');//仅仅返回第一个匹配到的元素
-        icon.style [transform] = `translate3d (0, 0, 0)`;//移动到原来的位置
+        icon.style[transform] = `translate3d(0, 0, 0)`;//移动到原来的位置
       }, false);
     });
     //eslint-disable-next-line
@@ -53,9 +54,9 @@ const MusicNote = forwardRef ((props, ref) => {
   
         setTimeout (() => {
           item.running = true;
-          item.style [transform] = `translate3d (0, 750px, 0)`;
+          item.style [transform] = `translate3d(0, 750px, 0)`;
           let icon = item.querySelector ("div");
-          icon.style [transform] = `translate3d (-40px, 0, 0)`;
+          icon.style [transform] = `translate3d(-40px, 0, 0)`;
         }, 20);
         break;
       }

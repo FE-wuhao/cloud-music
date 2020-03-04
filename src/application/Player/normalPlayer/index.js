@@ -163,11 +163,13 @@ function NormalPlayer(props) {
   useEffect(() => {
     if (!lyricScrollRef.current) return;
     let bScroll = lyricScrollRef.current.getBScroll();//获取是里画过的歌词的bScroll对象
+    
     if (currentLineNum > 5) {//如果当前播放的歌词的行号超过了5的话
       let lineEl = lyricLineRefs.current[currentLineNum - 5].current;//获取当前播放歌词的5句之前的歌词的ref
       bScroll.scrollToElement(lineEl, 1000);//使得lineEl滚动到当前页面的最上端以保证高亮的当前歌词在第6条的位置，滚动时长为1000ms
     } else {
       // 当前歌词行数<=5, 直接滚动到最顶端
+      //为什么切歌的时候歌词滚动报错了 显示bScroll.scrollTo(0, 0, 1000)undifine的  （0，0）是undifined？？▲
       bScroll.scrollTo(0, 0, 1000);
     }
   }, [currentLineNum]);
