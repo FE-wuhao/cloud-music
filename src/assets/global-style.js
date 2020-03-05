@@ -55,18 +55,23 @@ export const GlobalStyle = createGlobalStyle`
 `
 
 /* 这里也算是明白了他的用意，把全局公共的样式提炼出来方便外部进行样式引用，但是对于这两个函数还需要在研究研究啥意思 */
-// 扩大可点击区域
+// 扩大可点击区域：通过没有宽度和高度的伪元素，设置他的top、bottom、left、right，这四个量的值都是相对父元素的
+//话又说来，父元素不就是需要扩大点击区域的元素吗，他的四维相对于父元素都放大了10px，那整体就胖了一圈
 const extendClick = () => {
   return `
     position: relative;
-    &:before {
+    &:after {
       content: '';
       position: absolute;
       top: -10px; bottom: -10px; left: -10px; right: -10px;
     };
   `
 }
-// 一行文字溢出部分用... 代替
+// 一行文字溢出部分用... 代替  
+//使用的时候运行该函数，返回模板字符串，达到样式声明的作用
+//text-overflow:ellipsis：当文本溢出包含元素时，显示省略符号来代表被修剪的文本。
+//overflow: hidden;当文本溢出包含元素时，内容会被修剪，并且其余内容是不可见的。
+//white-space: nowrap;忽视原文中的换行空白，选择不换行。
 const noWrap = () => {
   return `
     text-overflow: ellipsis;
@@ -74,7 +79,7 @@ const noWrap = () => {
     white-space: nowrap;
   `
 }
-
+const x="ceshi";
 export default {
   'theme-color': '#d44439',
   'theme-color-shadow': 'rgba (212, 68, 57, .5)',
@@ -90,7 +95,10 @@ export default {
   'background-color': '#f2f3f4',
   'background-color-shadow': 'rgba (0, 0, 0, 0.3)',
   'highlight-background-color': '#fff',
-  //这里到底是个什么用法？？？？？？？？？？？？？？？？？？？？？？？？？？？？？、
+  //这里到底是个什么用法？？？？？？？？？？？？？？？？？？？？？？？？？？？？？▲
+  //2020/3/5 15:15 答：这里是ES6属性的简写 ES6允许在大括号内传入对象作为大括号所属对象的方法和属性
+  //例：x=‘’;y=function(){};z={x,y,"j":""}  这里就传入了三种类型：已有对象、已有方法、新定义对象
   extendClick,
-  noWrap
+  noWrap,
+  x
 }

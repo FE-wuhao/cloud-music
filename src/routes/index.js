@@ -41,7 +41,7 @@ export default [
       {
         path: "/singers",
         component: SuspenseComponent (SingersComponent),
-        key: "singers",//同理  这边的key是用来干嘛的
+        key: "singers",
         routes: [
           {
             path: "/singers/:id",
@@ -52,7 +52,9 @@ export default [
       {
         path: "/rank",
         component: SuspenseComponent (RankComponent),
-        key: "rank",//这里为什么跟其他路由不一样多了个key？
+        key: "rank",//这里为什么跟其他路由不一样多了个key？▲▲▲
+                    //2020/3/5 16:15 答：按照react的意思，数组的项都应该给上key，
+                    //这里的路由也都在数组中，给上key也是应该的，暂且这么理解吧，虽然没能说服我自己
         routes: [
           {
             path: "/rank/:id",
@@ -64,13 +66,13 @@ export default [
         path: "/search",
         exact: true,
         key: "search",
-        component: SuspenseComponent (AlbumComponent)
+        component: SuspenseComponent (SearchComponent)
       },
       {
         path: "/album/:id",
         exact: true,
         key: "album",
-        component: SuspenseComponent (SearchComponent)
+        component: SuspenseComponent (AlbumComponent)
       },
     ]
   }
