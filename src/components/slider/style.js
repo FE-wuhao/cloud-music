@@ -11,7 +11,7 @@ export const SliderContainer = styled.div`
      所以它的高度只取决于它内部的轮播图的高度 */
   /* height: 100%;  */
   /* margin: auto; */
-  background: white;
+  /* background: white; */
   .before {
     position: absolute;
     /* 从这里可以看出下拉的全部长度为300px */

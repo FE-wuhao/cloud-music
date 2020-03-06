@@ -20,7 +20,7 @@ import { withRouter } from 'react-router-dom';
     1.在图片的外面包裹一层LazyLoad，
       并设置placeholder属性为要懒加载时显示的内容（可以是图片或者其他）
     2.向scroll的onscroll属性传入执行函数，
-      当滑动的时候执行该函数，即出入forcecheck函数，
+      当滑动的时候执行该函数，即传入forcecheck函数，
       作用是解除懒加载状态显示图片，实现手段是。。。有待考证！
 */
 function RecommendList (props) {

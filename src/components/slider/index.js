@@ -5,7 +5,7 @@ import Swiper from "swiper";
 
 /*swiper的使用步骤：
   与better-scroll类似
-  1.创建swiper容器，类名设置为‘lider-container’
+  1.创建swiper容器，类名设置为‘slider-container’
   2.在useeffect中实例化swiper对象，并配置好初始化的参数，将类名传入到该对象中去，以供其定位
   3.在swiper容器中创建div，类名‘swiper-wrapper’，并在该div中插入轮播图图片数组，图片数组的使用需按照固定格式来，做好相关配置即可
 */
