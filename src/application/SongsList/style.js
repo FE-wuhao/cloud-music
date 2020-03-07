@@ -80,9 +80,9 @@ export const SongItem = styled.ul`
       flex-direction: column;
       justify-content: space-around;
       border-bottom: 1px solid ${style["border-color"]};
-      ${style.noWrap ()}
+      ${style.noWrap()}
       >span {
-        ${style.noWrap ()}
+        ${style.noWrap()}
       }
       >span:first-child {
         color: ${style["font-color-desc"]};

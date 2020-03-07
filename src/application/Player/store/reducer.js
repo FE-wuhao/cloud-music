@@ -50,7 +50,7 @@ const handleInsertSong = (state, song) => {
   */
   playList.splice (currentIndex, 0, song);//向当前的索引号位置插入歌曲
   // 同理，处理 sequenceList
-  let sequenceIndex = findIndex (playList [currentIndex], sequenceList) + 1;
+  let sequenceIndex = findIndex (playList[currentIndex], sequenceList) + 1;
   let fsIndex = findIndex (song, sequenceList);
   // 开始插入
   sequenceList.splice (sequenceIndex, 0, song);

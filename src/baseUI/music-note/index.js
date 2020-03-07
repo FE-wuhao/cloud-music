@@ -45,7 +45,7 @@ const MusicNote = forwardRef ((props, ref) => {
   const startAnimation = ({x, y}) => {
     for (let i = 0; i < ICON_NUMBER; i++) {
       let domArray = [].slice.call (iconsRef.current.children)
-      let item = domArray [i]
+      let item = domArray[i]
       // 选择一个空闲的元素来开始动画
       if (item.running === false) {
         item.style.left = x + "px";
@@ -54,9 +54,9 @@ const MusicNote = forwardRef ((props, ref) => {
   
         setTimeout (() => {
           item.running = true;
-          item.style [transform] = `translate3d(0, 750px, 0)`;
+          item.style[transform] = `translate3d(0, 750px, 0)`;
           let icon = item.querySelector ("div");
-          icon.style [transform] = `translate3d(-40px, 0, 0)`;
+          icon.style[transform] = `translate3d(-40px, 0, 0)`;
         }, 20);
         break;
       }

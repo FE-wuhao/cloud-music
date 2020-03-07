@@ -245,7 +245,7 @@ export const LyricWrapper = styled.div`
     line-height: 32px;
     color: rgba (255, 255, 255, 0.5);
     white-space: normal;
-    font-size: ${style ["font-size-l"]};
+    font-size: ${style["font-size-l"]};
     &.current {
       color: #fff;
     }

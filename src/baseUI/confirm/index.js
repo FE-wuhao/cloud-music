@@ -1,7 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import { CSSTransition } from 'react-transition-group';
 import {ConfirmWrapper} from './style'
-import { fromJS } from 'immutable';
+// import { fromJS } from 'immutable';
 
 //其实作为一个模态框最好再加一个全屏的阴影遮罩 这样才能突出模态框
 const Confirm = forwardRef((props, ref) => {

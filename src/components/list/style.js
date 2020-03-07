@@ -37,14 +37,25 @@ export const ListItem = styled.div`
     padding-top: 100%; 
       /*decorate的目的是为了img右上角的文字做遮罩，防止出现白色图片看不清字 */
     .decorate {
+      z-index: 1;
       position: absolute;
       top: 0;
       width: 100%;
       height: 35px;
       border-radius: 3px;
-      background: linear-gradient (hsla (0,0%,43%,.4),hsla (0,0%,100%,0));
+      /*hsla(hue, saturation, lightness, alpha)
+          hue- 色相:范围0-360，其中0 (或 360) 为红色, 120 为绿色, 240 为蓝色
+          saturation - 饱和度：定义饱和度; 0% 为灰色， 100% 全色
+          lightness - 亮度：定义亮度 0% 为暗, 50% 为普通, 100% 为白
+          alpha - 透明度：定义透明度 0（透完全明） ~ 1（完全不透明）
+        linear-gradient(direction, color-stop1, color-stop2, ...)
+          direction：	用角度值指定渐变的方向（或角度）。
+          color-stop1, color-stop2,...：用于指定渐变的起止颜色。
+       */
+      background: linear-gradient(hsla(0,0%,43%,.4),hsla(0,0%,100%,0));
     }
     .play_count {
+      z-index: 1;
       position: absolute;
       right: 2px;
       top: 2px;

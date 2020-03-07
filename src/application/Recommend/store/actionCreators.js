@@ -18,13 +18,15 @@ export const changeRecommendList = (data) => ({
 
 export const changeEnterLoading = (data) => ({
   type: actionTypes.CHANGE_ENTER_LOADING,
-  data//这样写也是可以的，get的时候不需要键名就能直接抓到数据了???????????????????????为什么这里不需要转成immutable的格式？？？？？？？？？？？？？？？？？、
+  data//这样写也是可以的，get的时候不需要键名就能直接抓到数据了???????????????????????为什么这里不需要转成immutable的格式？？？？？？？？？？？？？？？？？、▲
+      //2020/3/7 10:27 答：这里还是ES6的简洁对象表示法，data是一个对象，这样写等同于‘data：data’。
+      //另外，对于基本值类型（boolean，string，number，null，undifined，symbol）无需进行fromjs转化即可存入immutable数据结构中了，因为fromJS的作用是将 JS 对象转换为 immutable 对象
 });
 
 //请求数据
 //这里用到了thunk，大致过程是在mapDispatchToProps的时候将dispatch传入了getBannerList中，等到异步数据回来后再调用dispatch，使得reducer将数据写入store中
 //需要做的就是在actioncreator中返回一个异步函数，该函数的形参为dispatch，在connect映射的时候mapDispatchToProps会将dispatch传入
-//但只是暂时的一个意会式的理解  等到项目整体搭建完成后再来深究原理
+//但只是暂时的一个意会式的理解  等到项目整体搭建完成后再来深究原理▲
 export const getBannerList = () => {
   return (dispatch) => {
     getBannerRequest ().then (data => {

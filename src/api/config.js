@@ -6,7 +6,7 @@ import axios from 'axios';
     3.可以设置拦截器在axios请求发出前和接收后对数据进行处理
 */
 
-export const baseUrl = 'http://49.233.185.168:3000';
+export const baseUrl = 'http://111.229.243.7:3000';
 
 //axios 的实例及拦截器配置
 const axiosInstance = axios.create ({

@@ -249,14 +249,14 @@ function NormalPlayer(props) {
                     currentLyric
                       ? currentLyric.lines.map ((item, index) => {
                       // 对于每一行歌词都创建ref，用于后面的歌词滚动，因为scrolltoelement需要具体的dom，提前存好的ref提供过去就好了
-                      lyricLineRefs.current [index] = React.createRef ();
+                      lyricLineRefs.current[index] = React.createRef();
                       return (
                         <p
                           className={`text ${
                             currentLineNum === index ? "current" : ""
                           }`}//比对是否是当前行  如果是则字体高亮
                           key={item + index}
-                          ref={lyricLineRefs.current [index]}
+                          ref={lyricLineRefs.current[index]}
                         >
                           {item.txt}
                         </p>
