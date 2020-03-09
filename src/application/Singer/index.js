@@ -12,7 +12,14 @@ import { getSingerInfo, changeEnterLoading } from "./store/actionCreators";
 import MusicNote from "../../baseUI/music-note/index";
 
 function Singer(props) {
-  const initialHeight = useRef(0);//初始高度   我不明白了  这里的ref并没有用到任何元素身上  直接用变量不久好了  这里用什么ref哦。。。。
+  const initialHeight = useRef(0);//初始高度 我不明白了，这里的ref并没有用到任何元素身上，直接用变量不就好了，这里用什么ref哦。。。。▲
+  //2020/3/9 11:18 答：useRef的作用是保存一个不受组件生命周期影响的值。
+  //为什么不用usestate？答：当我们更新状态的时候,React 会重新渲染组件,如果用usestate
+  //每一次渲染都会拿到独立的state,并重新渲染使用到state的函数. 
+  //每一次重新渲染的使用到state的函数里面都有它自己的 count 
+  //参考http://www.yanwenbo.cn/topic/5e41427005c6ca503b4aa204
+  //https://zhuanlan.zhihu.com/p/102501434
+  //https://segmentfault.com/a/1190000020435923?utm_source=tag-newest
   const [showStatus, setShowStatus] = useState(true);//动画的开启与关闭
 
   const { 
