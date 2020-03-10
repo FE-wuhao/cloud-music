@@ -11,6 +11,7 @@ const Header = React.forwardRef ((props, ref) => {
       {
         //判断是否要进行跑马灯滚动模式 
         isMarquee ? 
+        //eslint-disable-next-line
         <marquee><h1>{title}</h1></marquee>:
         <h1>{title}</h1>
       }

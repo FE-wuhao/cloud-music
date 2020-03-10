@@ -27,6 +27,7 @@ function Recommend (props) {
   if (!recommendList.size){
     getRecommendListDataDispatch ();
   }
+  //eslint-disable-next-line
   }, []);//useeffect第二个参数传入空数组可以保证effect只在mount阶段运行，避免组件更新后带来的重新渲染，如果能确切定位到具体需要订阅的对象自然是最好了
   //经过测试，页面切换确实会进入这个effect，难道页面切换会导致组件unmount？？？？需要核实
   //已核实，路由跳转确实会导致组件销毁2020.2.16 14:15

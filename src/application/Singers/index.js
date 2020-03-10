@@ -91,7 +91,7 @@ function Singers(props) {
           list={categoryTypes} 
           title={"分类(默认热门):"} 
           handleClick={val => handleUpdateCatetory(val)} //这里的val到底是个什么鬼  是哪里来的
-          //答疑：通过子组件Horizen的handleClick方法来向父组件singer组件的handleUpdateCatetory方法传值，这里的val是内置于组件Horizen内部的，他是被点击的子项的key值
+          //答：通过子组件Horizen的handleClick方法来向父组件singer组件的handleUpdateCatetory方法传值，这里的val是内置于组件Horizen内部的，他是被点击的子项的key值
           oldVal={category}
         ></Horizen>
         <Horizen 

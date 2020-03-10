@@ -82,7 +82,8 @@ const Scroll = forwardRef ((props, ref) => {
     return () => {
       bScroll.off ('scrollEnd');
     }
-  }, [pullUp, bScroll]);
+    //eslint-disable-next-line
+  }, [pullUp, bScroll]);  
   //recommend中未使用
   useEffect (() => {
     if (!bScroll || !pullDown) return;
@@ -95,7 +96,8 @@ const Scroll = forwardRef ((props, ref) => {
     return () => {
       bScroll.off ('touchEnd');
     }
-  }, [pullDown, bScroll]);
+    //eslint-disable-next-line
+  }, [pullDown, bScroll]);  
   //如果refresh功能开启了且scroll发生了变化则进行bScroll的刷新
   useEffect (() => {
     if (refresh && bScroll){

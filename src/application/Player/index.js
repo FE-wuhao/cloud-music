@@ -219,7 +219,8 @@ function Player (props) {
     getLyric (current.id);//根据歌曲id获取歌词信息
     setCurrentTime(0);//从头开始播放
     setDuration((current.dt / 1000) | 0);//时长  回头测试一下|和||是否都能达到动态选择对象的效果▲▲▲▲▲
-  }, [playList, currentIndex]);
+    //eslint-disable-next-line
+  }, [playList, currentIndex]);  
   useEffect(() => {
     playing ? audioRef.current.play() : audioRef.current.pause();
   }, [playing]);

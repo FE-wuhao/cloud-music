@@ -19,6 +19,7 @@ function Rank(props) {
     if(!rankList.length){
       getRankListDataDispatch();
     }
+    //eslint-disable-next-line
   }, []);
 
   const enterDetail = (detail) => {
