@@ -51,6 +51,7 @@ export const CollectButton = styled.div`
   position: absolute;
 
   /*这一手操作用来实现居中的  怎么做到的？？？ */
+  /*答：左右为0，贴边处理，上下auto，自动居中 2020/3/11 10:59 */
   left: 0; right: 0;
   margin: auto;
 

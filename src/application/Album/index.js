@@ -36,7 +36,7 @@ function Album (props) {
   }, [getAlbumDataDispatch, id]);
 
   
-  //usecallback的优势是什么？？？
+  //usecallback的优势是什么？？？▲
   const handleBack = useCallback (() => {
     setShowStatus (false);//关闭动画
   }, []);
@@ -167,8 +167,8 @@ function Album (props) {
     {/* 动画展示的旋转平移的具体内容 */}
       <Container play={songsCount}>
         <Loading show={enterLoading}></Loading>
-        {/*对于这里的header和scroll为什么会有重叠抱有疑问  难道是因为不是一个z-index上的？ */}
-        {/*scroll相对于container的大小是100%，故产生了重叠 */}
+        {/*对于这里的header和scroll为什么会有重叠抱有疑问  难道是因为不是一个z-index上的？▲ */}
+        {/*答：scroll相对于container的大小是100%，故产生了重叠 */}
         <Header ref={headerEl} title={title} handleClick={handleBack} isMarquee={isMarquee}></Header>{/*歌单页面最上方的返回箭头和标题 */}
         
         {/*老规矩  将方法传入scroll组件  在组件内部向方法传参 */}

@@ -79,7 +79,8 @@ function Singer(props) {
     } else if (newY >= minScrollY) {//如果上拉了但是歌单列表的上边框还没够到标题的下边框
       layerDOM.style.top = `${height - OFFSET + newY}px`;//歌单列表背景遮罩与歌单列表同步移动
       //这时候保证遮罩的层叠优先级比图片高，不至于被图片挡住   
-      //这一手是什么神操作？？没整明白🔺🔺🔺🔺🔺🔺
+      //这一手是什么神操作？？没整明白▲
+      //答：设置paddingtop为父元素宽度的75%，用以二三状态切换时的自动赋值2020/3/11 10:56
       layerDOM.style.zIndex = 1;
       imageDOM.style.paddingTop = "75%";
       imageDOM.style.height = 0;

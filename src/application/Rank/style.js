@@ -25,8 +25,8 @@ export const List = styled.ul`
   flex-wrap: wrap;
   background: ${style["background-color"]};
   /* 这又是个什么原理  list整体后面加一个占位的框？为什么就起到了不居中的作用呢？？？？？？？？ */
-  /* ：：after生成的元素插入在List的最后面话又说回来  如果排行榜满了三个那岂不是最下面一行是一块空白？？ */
-  /* 解答：因为他没有高度 所以就算多出一行也没事  等于没有 */
+  /* ：：after生成的元素插入在List的最后面话又说回来  如果排行榜满了三个那岂不是最下面一行是一块空白？？▲ */
+  /* 答：因为他没有高度 所以就算多出一行也没事  等于没有 */
   &::after {
     content:"";
     display:block;
