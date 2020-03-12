@@ -68,6 +68,7 @@ function Player (props) {
     let newMode = (mode + 1) % 3;//mode+1进行模式切换： 0：顺序模式 1：单曲循环 2：随机播放
     if (newMode === 0) {//顺序模式
       /*有一个问题：这个sequencePlayList的数据是从哪里来的？？？▲▲▲▲▲▲▲ */
+      /*答：来自子组件songlist，点击歌曲触发的事件更新了playList和sequencePlayList 2020/3/12 9:45*/
       changePlayListDispatch(sequencePlayList);//重置播放列表的内容为sequencePlayList
       let index = findIndex(currentSong, sequencePlayList);//根据当前的歌曲获取他的索引号
       changeCurrentIndexDispatch(index);//更改当前的索引号
