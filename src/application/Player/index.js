@@ -184,14 +184,13 @@ function Player (props) {
         audioRef.current.play ();
       });
   };
-
   //组件初始化
   useEffect(() => {
     if (
       !playList.length ||//播放列表长度为0
       currentIndex === -1 ||//歌曲编号为-1
       !playList[currentIndex] ||//播放列表中该编号歌曲不存在
-      playList[currentIndex].id === preSong.id || //当前歌曲与上一首歌曲相同
+      playList[currentIndex].id === preSong.id || //当前歌曲与上一首歌曲相同  对标的是播放列表发生了变化但是当前播放曲目的位置并未改变的情况
       !songReady.current
     )
       return;

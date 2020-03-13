@@ -201,7 +201,12 @@ function NormalPlayer(props) {
           />
         </div>
         {/*还是用来调色的 */}
-        {/*并列类名可以实现子元素效果？？？这里怎么又来这手操作？？？？ */}
+        {/*并列类名可以实现子元素效果？？？这里怎么又来这手操作？？？？▲ */}
+        {/*答：并不是这么回事 backgroud是多个元素共用的选择器样式  
+            .background {...
+              &.layer {...}}
+          而&.layer写在这里表示的是只有同时声明了background和layer的元素所独有的样式
+          */}
         <div className="background layer"></div>
         {/*标题栏 */}
         <Top className="top">

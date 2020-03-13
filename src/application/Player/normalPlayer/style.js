@@ -30,7 +30,7 @@ export const NormalPlayerContainer = styled.div`
         transition-duration     规定完成过渡效果需要多少秒或毫秒。
         transition-timing-function     规定速度效果的速度曲线。
         transition-delay           定义过渡效果何时开始。
-        注释：请始终设置 transition-duration属性，否则时长为 0，就不会产生过渡效果。
+        注：请始终设置 transition-duration属性，否则时长为 0，就不会产生过渡效果。
     */
   &.normal-enter,&.normal-exit-done {
     .top {
