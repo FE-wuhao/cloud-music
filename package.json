@@ -24,7 +24,7 @@
     "redux-thunk": "^2.3.0",
     "remote-redux-devtools": "^0.5.16",
     "styled-components": "^4.4.1",
-    "swiper": "^5.2.1"
+    "swiper": "^6.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
